@@ -1,4 +1,4 @@
-# IA Project Manager
+# AI Project Manager
 
 > **Markdown-based project management system optimized for AI-assisted development**
 
@@ -8,9 +8,9 @@ Stop spending time re-explaining context to AI. This system creates a persistent
 [![AI: Claude](https://img.shields.io/badge/AI-Claude%20%7C%20Gemini-blue)]()
 [![Status: Production Ready](https://img.shields.io/badge/Status-Production%20Ready-green)]()
 
-I was using a self-maded markdown files to manage my projects. It was awesome, because I was registering all decisions, sprints, tasks, etc. In the last 6 months, every project I was using this system, I was able to save time and register all decisions in a persistent way.
+I began by using custom markdown files to manage my projects. It was incredibly effective for documenting decisions, sprints, and tasks. Over the last six months, this system has consistently saved me time and provided a persistent record of every project's evolution.
 
-But I found that I was spending too much time explaining the context to the AI, and manually create markdown files was a waste of time. So I created this system to help me manage my _(and maybe, your)_ projects.
+However, I realized I was spending too much time re-explaining context to AI, and manually creating these files became a bottleneck. I built this system to automate that process and streamline project management for myself—and now, for you.
 
 ---
 
@@ -39,15 +39,15 @@ But I found that I was spending too much time explaining the context to the AI, 
 
 ```bash
 # Clone repository
-git clone https://github.com/yourusername/ia-project-manager
-cd ia-project-manager
+git clone https://github.com/yourusername/ai-project-manager
+cd ai-project-manager
 
 # Copy to your project
 cp -r .project /path/to/your/project/
 cp project-manager.md /path/to/your/project/CLAUDE.md
 
 # Or use npx (coming soon)
-npx ia-project-manager install
+npx ai-project-manager install
 ```
 
 ### First Session
@@ -496,8 +496,8 @@ Contributions welcome! Please:
 ### Development Setup
 
 ```bash
-git clone https://github.com/yourusername/ia-project-manager
-cd ia-project-manager
+git clone https://github.com/yourusername/ai-project-manager
+cd ai-project-manager
 
 # Test in a sample project
 mkdir test-project
@@ -526,15 +526,15 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📞 Support
 
-- **Issues:** [GitHub Issues](https://github.com/rmarsigli/ia-project-manager/issues)
-- **Discussions:** [GitHub Discussions](https://github.com/rmarsigli/ia-project-manager/discussions)
+- **Issues:** [GitHub Issues](https://github.com/rmarsigli/ai-project-manager/issues)
+- **Discussions:** [GitHub Discussions](https://github.com/rmarsigli/ai-project-manager/discussions)
 
 ---
 
 ## 🗺️ Roadmap
 
 ### v1.3 (Q1 2026)
-- [ ] NPX installer (`npx ia-project-manager install`)
+- [ ] NPX installer (`npx ai-project-manager install`)
 - [ ] Framework-specific guidelines (React, Laravel, Astro)
 - [ ] Interactive CLI setup wizard
 - [ ] Template presets

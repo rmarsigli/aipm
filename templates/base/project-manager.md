@@ -2,6 +2,10 @@
 
 > AI-assisted development with context persistence. Full docs: `.project/docs/`
 
+{{SLOT:guidelines}}
+<!-- Framework guidelines go here -->
+{{/SLOT:guidelines}}
+
 ## Directory Structure
 
 ```

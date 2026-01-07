@@ -1,0 +1,26 @@
+# Test files
+tests/
+*.test.js
+coverage/
+.temp-test/
+
+# Development
+.vscode/
+.idea/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Documentation (except README)
+docs/
+*.draft.md
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Misc
+.env*
+.DS_Store
