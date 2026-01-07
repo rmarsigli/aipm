@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.2] - 2026-01-07
+### Fixed
+- **Cross-Platform CI**: Added `cross-env` to fix `test` script on Windows.
+- **Line Endings**: Enforced LF via `.gitattributes` and `.prettierrc` to prevent linting errors on Windows.
+
 ## [1.0.1] - 2026-01-07
 ### Fixed
 - Resolved CI build issue by removing build artifacts from Git.
