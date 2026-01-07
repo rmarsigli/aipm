@@ -1,10 +1,24 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { mergeGuidelines } from './merger'
-import { InstallConfig, DetectedProject } from '@/types'
-import { FILES, PROJECT_STRUCTURE } from '@/constants'
+import { mergeGuidelines } from './merger.js'
+import { InstallConfig, DetectedProject } from '@/types/index.js'
+import { FILES, PROJECT_STRUCTURE } from '@/constants.js'
+import { logger } from '@/utils/logger.js'
+import { fileURLToPath } from 'url'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+
+/**
+ * Installs the project configuration and generates prompt files.
+ *
+ * @param config - The installation configuration (AI tools, guidelines, etc.)
+ * @param _detected - The detected project details (unused in current logic but kept for interface consistency)
+ * @throws Error if templates directory is missing or file operations fail
+ */
 export async function installProject(config: InstallConfig, _detected: DetectedProject): Promise<void> {
+    logger.debug('Starting installation process')
+
     // Try to find templates relative to the current script
     // In production (dist), it usually is a sibling 'templates'
     // In development (src/core), it is '../templates'
@@ -20,19 +34,26 @@ export async function installProject(config: InstallConfig, _detected: DetectedP
     }
 
     if (!fs.existsSync(templatesDir)) {
+        logger.error(`Templates directory not found in: ${templatesDir}`)
         throw new Error(
             `Templates directory not found. Searched in: ${path.join(__dirname, 'templates')} and ${path.join(__dirname, '../templates')}`
         )
     }
 
+    logger.debug(`Using templates from: ${templatesDir}`)
     await createProjectStructure(templatesDir)
 
+    logger.debug('Generating prompt files...')
     await Promise.all(config.ais.map((ai) => generatePrompt(ai, config, templatesDir)))
 
+    logger.debug('Making scripts executable...')
     await makeScriptsExecutable()
+
+    logger.success('Installation completed successfully')
 }
 
 async function createProjectStructure(templatesDir: string): Promise<void> {
+    logger.debug('Creating project structure...')
     const baseDir = path.join(templatesDir, 'base/.project')
     const targetDir = '.project'
 

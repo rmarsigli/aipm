@@ -1,12 +1,10 @@
-/* eslint-disable no-console */
-import chalk from 'chalk'
 import fs from 'fs-extra'
 import path from 'path'
-
-import { FILES } from '@/constants'
+import { FILES } from '@/constants.js'
+import { logger } from '@/utils/logger.js'
 
 export async function validate(): Promise<void> {
-    console.log(chalk.blue('Validating AIPM installation...'))
+    logger.info('Validating AIPM installation...')
 
     const errors: string[] = []
 
@@ -19,10 +17,10 @@ export async function validate(): Promise<void> {
     }
 
     if (errors.length > 0) {
-        console.error(chalk.red('Validation failed:'))
-        errors.forEach((e) => console.error(chalk.red(`- ${e}`)))
+        logger.error('Validation failed:')
+        errors.forEach((e) => logger.error(`- ${e}`))
         process.exit(1)
     }
 
-    console.log(chalk.green('✅ Validation passed'))
+    logger.success('Validation passed')
 }

@@ -2,12 +2,13 @@
 
 import { Command } from 'commander'
 import chalk from 'chalk'
-import { InstallOptions, UpdateOptions } from '@/types'
-import { install } from './commands/install'
-import { update } from './commands/update'
-import { diff } from './commands/diff'
-import { validate } from './commands/validate'
-import { version } from './version'
+import { InstallOptions, UpdateOptions } from '@/types/index.js'
+import { install } from './commands/install.js'
+import { update } from './commands/update.js'
+import { diff } from './commands/diff.js'
+import { validate } from './commands/validate.js'
+import { version } from './version.js'
+import { logger } from '@/utils/logger.js'
 
 const program = new Command()
 
@@ -20,7 +21,18 @@ const banner = `
 ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝     ╚═╝
 `
 
-program.name('aipm').description('AI-optimized project management system').version(version)
+program
+    .name('aipm')
+    .description('AI-optimized project management system')
+    .version(version)
+    .option('-v, --verbose', 'Enable verbose logging')
+    .hook('preAction', (thisCommand) => {
+        const options = thisCommand.opts()
+        if (options.verbose) {
+            logger.setVerbose(true)
+            logger.debug('Verbose mode enabled')
+        }
+    })
 
 program
     .command('install')

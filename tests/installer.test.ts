@@ -1,8 +1,9 @@
-import { installProject } from '../src/core/installer'
-import { createTempDir, cleanupTempDir } from './setup'
-import { InstallConfig, DetectedProject } from '../src/types'
+import { installProject } from '../src/core/installer.js'
+import { createTempDir, cleanupTempDir } from './setup.js'
+import { InstallConfig, DetectedProject } from '../src/types/index.js'
 import fs from 'fs-extra'
 import path from 'path'
+import { describe, test, expect, beforeEach, afterEach, jest } from '@jest/globals'
 
 describe('installProject', () => {
     let tempDir: string
@@ -34,7 +35,6 @@ describe('installProject', () => {
     })
 
     afterEach(async () => {
-        jest.restoreAllMocks()
         process.chdir(originalCwd)
         await cleanupTempDir(tempDir)
     })

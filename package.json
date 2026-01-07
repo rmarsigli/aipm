@@ -3,6 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "type": "module",
   "version": "1.0.1-beta.1",
   "description": "Markdown-based project management system optimized for AI-assisted development",
   "homepage": "https://github.com/rmarsigli/aipm",
@@ -23,7 +24,7 @@
     "dev": "tsup --watch",
     "build": "tsup",
     "type-check": "tsc --noEmit",
-    "test": "jest",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint src/**/*.ts --fix",
     "format": "prettier --write \"src/**/*.ts\"",
@@ -45,7 +46,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
-    "@types/diff": "^8.0.0",
+    "@jest/globals": "^30.2.0",
     "@types/fs-extra": "^11.0.4",
     "@types/inquirer": "^9.0.9",
     "@types/jest": "^30.0.0",

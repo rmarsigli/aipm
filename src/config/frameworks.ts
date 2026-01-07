@@ -1,6 +1,6 @@
-import { FrameworkConfig, PackageJson } from '@/types'
+import { FrameworkConfig, PackageJson } from '@/types/index.js'
 import fs from 'fs-extra'
-import { PROMPTS } from '@/constants'
+import { PROMPTS } from '@/constants.js'
 
 const hasDep = (pkg: PackageJson, name: string): boolean => {
     return !!(pkg?.dependencies?.[name] || pkg?.devDependencies?.[name])

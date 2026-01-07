@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
-import chalk from 'chalk'
+import { logger } from '@/utils/logger.js'
 
 export async function diff(): Promise<void> {
     await Promise.resolve()
-    console.log(chalk.blue('Running diff...'))
+    logger.info('Running diff...')
     // TODO: Full implementation requires regenerating prompts based on current config/detection
     // and comparing with file on disk.
-    console.log(chalk.yellow('Diff functionality is experimental/stubbed.'))
+    logger.warn('Diff functionality is experimental/stubbed.')
 }

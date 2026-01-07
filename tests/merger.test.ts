@@ -1,7 +1,8 @@
-import { mergeGuidelines } from '../src/core/merger'
-import { createTempDir, cleanupTempDir } from './setup'
+import { mergeGuidelines } from '../src/core/merger.js'
+import { createTempDir, cleanupTempDir } from './setup.js'
 import fs from 'fs-extra'
 import path from 'path'
+import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 describe('mergeGuidelines', () => {
     let tempDir: string

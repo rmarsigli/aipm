@@ -1,14 +1,14 @@
-/* eslint-disable no-console */
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-import { DetectedProject, InstallConfig } from '@/types'
-import { AI_TOOLS, PROMPTS } from '@/constants'
+import { DetectedProject, InstallConfig } from '@/types/index.js'
+import { AI_TOOLS, PROMPTS } from '@/constants.js'
+import { logger } from '@/utils/logger.js'
 
 export async function promptConfiguration(
     detected: DetectedProject,
     options: Partial<InstallConfig> & { yes?: boolean } = {}
 ): Promise<InstallConfig | null> {
-    console.log(chalk.blue('\n📋 Installation Options\n'))
+    logger.info(chalk.blue('\n📋 Installation Options\n'))
 
     const { ais } = await inquirer.prompt<{ ais: string[] }>([
         {
@@ -68,20 +68,20 @@ export async function promptConfiguration(
     ])
 
     if (!options.yes) {
-        console.log(chalk.blue('\n📄 Installation Summary\n'))
-        console.log('Files to be created:')
-        console.log(chalk.gray('  • .project/ (directory structure)'))
+        logger.info(chalk.blue('\n📄 Installation Summary\n'))
+        logger.info('Files to be created:')
+        logger.info(chalk.gray('  • .project/ (directory structure)'))
 
         const tokens = version === 'compact' ? '~1,000' : '~4,000'
         ais.forEach((ai: string) => {
             const filename = getPromptFilename(ai)
-            console.log(chalk.gray(`  • ${filename} (${tokens} tokens${guidelines.length > 0 ? ' + guidelines' : ''})`))
+            logger.info(chalk.gray(`  • ${filename} (${tokens} tokens${guidelines.length > 0 ? ' + guidelines' : ''})`))
         })
 
         const existingFiles = detected.existingSetup.hasPrompts
         if (existingFiles.length > 0) {
-            console.log(chalk.yellow('\n⚠️  Warning: This will replace existing files:'))
-            existingFiles.forEach((f: string) => console.log(chalk.yellow(`   • ${f}`)))
+            logger.warn('\n Warning: This will replace existing files:')
+            existingFiles.forEach((f: string) => logger.warn(`   • ${f}`))
         }
 
         const { confirm } = await inquirer.prompt<{ confirm: boolean }>([

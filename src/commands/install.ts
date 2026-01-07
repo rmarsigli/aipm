@@ -1,10 +1,10 @@
 import ora from 'ora'
 import chalk from 'chalk'
-/* eslint-disable no-console */
-import { detectProject } from '@/core/detector'
-import { installProject } from '@/core/installer'
-import { promptConfiguration } from '@/prompts/install'
-import { InstallConfig, InstallOptions } from '@/types'
+import { detectProject } from '@/core/detector.js'
+import { installProject } from '@/core/installer.js'
+import { promptConfiguration } from '@/prompts/install.js'
+import { InstallConfig, InstallOptions } from '@/types/index.js'
+import { logger } from '@/utils/logger.js'
 
 export async function install(options: InstallOptions = {}): Promise<void> {
     const spinner = ora('Detecting project...').start()
@@ -12,19 +12,19 @@ export async function install(options: InstallOptions = {}): Promise<void> {
     spinner.succeed('Project detected')
 
     if (detected.framework) {
-        console.log(chalk.gray(`   ✅ Found: ${detected.framework} project`))
+        logger.info(`Found: ${detected.framework} project`)
     }
     if (detected.hasGit) {
-        console.log(chalk.gray('   ✅ Git repository: Yes'))
+        logger.info('Git repository: Yes')
     }
     if (detected.packageManager) {
-        console.log(chalk.gray(`   ✅ Package manager: ${detected.packageManager}`))
+        logger.info(`Package manager: ${detected.packageManager}`)
     }
 
     let config: InstallConfig | null
 
     if (options.preset) {
-        console.log(chalk.yellow('\n  Preset feature coming soon, using interactive mode\n'))
+        logger.warn('Preset feature coming soon, using interactive mode')
         config = await promptConfiguration(detected, options)
     } else if (options.ai && options.guidelines) {
         config = {
@@ -38,7 +38,7 @@ export async function install(options: InstallOptions = {}): Promise<void> {
     }
 
     if (!config) {
-        console.log(chalk.red('\n❌ Installation cancelled\n'))
+        logger.error('Installation cancelled')
         return
     }
 
@@ -48,16 +48,16 @@ export async function install(options: InstallOptions = {}): Promise<void> {
 
     spinner.succeed('Installation complete!')
 
-    console.log(chalk.green('\n🎉 Installation complete!\n'))
-    console.log('Next steps:')
-    console.log(chalk.gray('  1. Run: .project/scripts/pre-session.sh'))
-    console.log(
-        chalk.gray('  2. Create first task: cp .project/_templates/v1/task-template.md .project/current-task.md')
+    logger.success('Installation complete!')
+    logger.info('Next steps:')
+    logger.info(`  1. Run: ${chalk.cyan('.project/scripts/pre-session.sh')}`)
+    logger.info(
+        `  2. Create first task: ${chalk.cyan('cp .project/_templates/v1/task-template.md .project/current-task.md')}`
     )
-    console.log(chalk.gray('  3. Start coding with AI!\n'))
+    logger.info('  3. Start coding with AI!')
 
     if (config.ais.includes('claude-code') || config.ais.includes('claude-ai')) {
-        console.log(chalk.blue('📚 Start your AI session with:'))
-        console.log(chalk.blue('   "Follow session start protocol and continue development"\n'))
+        logger.info('Start your AI session with:')
+        logger.info(' "Follow session start protocol and continue development"')
     }
 }

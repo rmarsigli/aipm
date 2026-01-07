@@ -1,7 +1,8 @@
-import { detectProject, getFrameworkDisplayName } from '../src/core/detector'
-import { createTempDir, cleanupTempDir } from './setup'
+import { detectProject, getFrameworkDisplayName } from '../src/core/detector.js'
+import { createTempDir, cleanupTempDir } from './setup.js'
 import fs from 'fs-extra'
 import path from 'path'
+import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
 
 describe('detectProject', () => {
     let tempDir: string

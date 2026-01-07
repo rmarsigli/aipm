@@ -1,10 +1,19 @@
 import fs from 'fs-extra'
 import path from 'path'
-import { FRAMEWORKS, LOCK_FILES, PROMPT_FILES } from '@/config/frameworks'
-import { DetectedProject, FrameworkConfig, PackageJson } from '@/types'
-import { FILES } from '@/constants'
+import { FRAMEWORKS, LOCK_FILES, PROMPT_FILES } from '@/config/frameworks.js'
+import { DetectedProject, FrameworkConfig, PackageJson } from '@/types/index.js'
+import { FILES } from '@/constants.js'
+import { logger } from '@/utils/logger.js'
 
+/**
+ * Detects the project configuration in the specified directory.
+ * Identifies the framework, package manager, and existing AI configuration files.
+ *
+ * @param cwd - The current working directory to scan (default: process.cwd())
+ * @returns A promise resolving to the detected project details
+ */
 export async function detectProject(cwd: string = process.cwd()): Promise<DetectedProject> {
+    logger.debug(`Detecting project in: ${cwd}`)
     const pkgPath = path.join(cwd, FILES.PACKAGE_JSON)
     const pkg = (await fs.pathExists(pkgPath)) ? ((await fs.readJson(pkgPath)) as PackageJson) : null
 

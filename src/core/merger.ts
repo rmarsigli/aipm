@@ -1,11 +1,21 @@
 import fs from 'fs-extra'
 import path from 'path'
+import { logger } from '@/utils/logger.js'
 
+/**
+ * Merges the base prompt with framework-specific guidelines.
+ *
+ * @param basePrompt - The content of the base prompt template
+ * @param guidelines - Array of guideline IDs (e.g., 'react', 'astro')
+ * @param templatesDir - Path to the templates directory
+ * @returns The merged prompt content
+ */
 export async function mergeGuidelines(basePrompt: string, guidelines: string[], templatesDir: string): Promise<string> {
     if (!guidelines || guidelines.length === 0) {
         return basePrompt
     }
 
+    logger.debug(`Merging guidelines: ${guidelines.join(', ')}`)
     const guidelineContents: string[] = []
 
     for (const guideline of guidelines) {
