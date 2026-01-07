@@ -12,19 +12,19 @@ export async function install(options: any = {}): Promise<void> {
         spinner.succeed('Project detected')
         
         if (detected.framework) {
-            console.log(chalk.gray(`   ✓ Found: ${detected.framework} project`))
+            console.log(chalk.gray(`   ✅ Found: ${detected.framework} project`))
         }
         if (detected.hasGit) {
-            console.log(chalk.gray('   ✓ Git repository: Yes'))
+            console.log(chalk.gray('   ✅ Git repository: Yes'))
         }
         if (detected.packageManager) {
-            console.log(chalk.gray(`   ✓ Package manager: ${detected.packageManager}`))
+            console.log(chalk.gray(`   ✅ Package manager: ${detected.packageManager}`))
         }
         
         let config: InstallConfig | null
         
         if (options.preset) {
-            console.log(chalk.yellow('\n⚠️  Preset feature coming soon, using interactive mode\n'))
+            console.log(chalk.yellow('\n  Preset feature coming soon, using interactive mode\n'))
             config = await promptConfiguration(detected, options)
         } else if (options.ai && options.guidelines) {
             config = {
