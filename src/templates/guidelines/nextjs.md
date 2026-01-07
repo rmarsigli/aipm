@@ -3,7 +3,7 @@
 ### MANDATORY CODING STANDARDS - NEVER VIOLATE THESE:
 1. **ALWAYS** write everything in **INTERNATIONAL ENGLISH**
 2. **NEVER** add semicolons at the end of lines
-3. **ALL** files must be kebab-case (`page.tsx`, `layout.tsx`, `loading.tsx`)
+3. **ALL** files must be kebab-case (e.g., `my-component.tsx`), EXCEPT for reserved Next.js App Router files (`page.tsx`, `layout.tsx`, `loading.tsx`)
 4. **NO** inline comments, avoid **AVOID** comments unless absolutely necessary
 5. In `.ts` and `.tsx` files **ALWAYS** use tab for indentation with size 4
 6. **NO** trailing commas in objects/arrays

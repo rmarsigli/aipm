@@ -44,8 +44,10 @@ program
     .option('--compact', 'Use compact version (default)', true)
     .option('--full', 'Use full version')
     .action(async (options: unknown) => {
+        /* eslint-disable no-console */
         console.log(chalk.blue(banner))
         console.log(chalk.blue(`AIPM v${version}\n`))
+        /* eslint-enable no-console */
 
         try {
             await install(options as InstallOptions)
@@ -61,8 +63,10 @@ program
     .description('Update existing installation')
     .option('-f, --force', 'Overwrite customizations')
     .action(async (options: unknown) => {
+        /* eslint-disable no-console */
         console.log(chalk.blue(banner))
         console.log(chalk.blue(`AIPM v${version}\n`))
+        /* eslint-enable no-console */
 
         try {
             await update(options as UpdateOptions)
@@ -97,6 +101,15 @@ program
             console.error(chalk.red(`\n❌ Error: ${message}\n`))
             process.exit(1)
         }
+    })
+
+import { completion } from './commands/completion.js'
+
+program
+    .command('completion')
+    .description('Generate shell completion script')
+    .action(() => {
+        completion(program)
     })
 
 program.parse(process.argv)
