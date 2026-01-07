@@ -2,6 +2,7 @@ import fs from 'fs-extra'
 import path from 'path'
 import { mergeGuidelines } from './merger'
 import { InstallConfig, DetectedProject } from '@/types'
+import { FILES, PROJECT_STRUCTURE } from '@/constants'
 
 export async function installProject(config: InstallConfig, _detected: DetectedProject): Promise<void> {
     // Try to find templates relative to the current script
@@ -55,11 +56,22 @@ async function createProjectStructure(templatesDir: string): Promise<void> {
         throw error
     }
 
-    const dirs = ['backlog', 'completed', 'decisions', 'docs', 'ideas', 'reports']
+    const projectDir = path.join(process.cwd(), FILES.PROJECT_DIR)
 
-    for (const dir of dirs) {
-        await fs.ensureDir(path.join(targetDir, dir))
+    // Create structure
+    await fs.ensureDir(projectDir)
+
+    // Create standard directories
+    for (const dir of PROJECT_STRUCTURE) {
+        await fs.ensureDir(path.join(projectDir, dir))
     }
+
+    // Copy templates
+    // ... (templates logic remains as it depends on template filenames which are dynamic based on config)
+
+    // But we should use FILES for specific known files
+    // The installer logic is complex regarding which files to copy...
+    // Let's just fix the .project reference for now.
 }
 
 async function generatePrompt(ai: string, config: InstallConfig, templatesDir: string): Promise<void> {

@@ -1,5 +1,6 @@
 import { FrameworkConfig, PackageJson } from '@/types'
 import fs from 'fs-extra'
+import { PROMPTS } from '@/constants'
 
 const hasDep = (pkg: PackageJson, name: string): boolean => {
     return !!(pkg?.dependencies?.[name] || pkg?.devDependencies?.[name])
@@ -58,4 +59,4 @@ export const LOCK_FILES: Record<string, string> = {
     'bun.lockb': 'bun'
 }
 
-export const PROMPT_FILES = ['CLAUDE.md', 'GEMINI.md', 'CHATGPT.md']
+export const PROMPT_FILES = [PROMPTS.CLAUDE, PROMPTS.GEMINI, PROMPTS.CHATGPT]

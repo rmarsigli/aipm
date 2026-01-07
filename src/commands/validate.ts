@@ -3,16 +3,18 @@ import chalk from 'chalk'
 import fs from 'fs-extra'
 import path from 'path'
 
+import { FILES } from '@/constants'
+
 export async function validate(): Promise<void> {
     console.log(chalk.blue('Validating AIPM installation...'))
 
     const errors: string[] = []
 
-    if (!(await fs.pathExists(path.join(process.cwd(), '.project')))) {
-        errors.push('Missing .project directory')
+    if (!(await fs.pathExists(path.join(process.cwd(), FILES.PROJECT_DIR)))) {
+        errors.push(`Missing ${FILES.PROJECT_DIR} directory`)
     }
 
-    if (!(await fs.pathExists(path.join(process.cwd(), '.project/scripts/pre-session.sh')))) {
+    if (!(await fs.pathExists(path.join(process.cwd(), FILES.PRE_SESSION_SCRIPT)))) {
         errors.push('Missing pre-session script')
     }
 

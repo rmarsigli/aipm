@@ -14,6 +14,17 @@ export const PROMPTS = {
     CHATGPT: 'CHATGPT.md'
 } as const
 
+export const PROJECT_STRUCTURE = [
+    'backlog',
+    'completed',
+    'decisions',
+    'docs',
+    'ideas',
+    'reports',
+    'scripts',
+    '_templates'
+] as const
+
 export const AI_TOOLS = {
     CLAUDE_CODE: 'claude-code',
     CLAUDE_AI: 'claude-ai',

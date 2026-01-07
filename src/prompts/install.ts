@@ -2,6 +2,7 @@
 import inquirer from 'inquirer'
 import chalk from 'chalk'
 import { DetectedProject, InstallConfig } from '@/types'
+import { AI_TOOLS, PROMPTS } from '@/constants'
 
 export async function promptConfiguration(
     detected: DetectedProject,
@@ -15,10 +16,10 @@ export async function promptConfiguration(
             name: 'ais',
             message: 'Which AI tools will you use?',
             choices: [
-                { name: 'Claude Code (terminal AI assistant)', value: 'claude-code', checked: true },
-                { name: 'Claude.ai (web interface)', value: 'claude-ai', checked: true },
-                { name: 'Google Gemini', value: 'gemini', checked: false },
-                { name: 'ChatGPT', value: 'chatgpt', checked: false }
+                { name: 'Claude Code (terminal AI assistant)', value: AI_TOOLS.CLAUDE_CODE, checked: true },
+                { name: 'Claude.ai (web interface)', value: AI_TOOLS.CLAUDE_AI, checked: true },
+                { name: 'Google Gemini', value: AI_TOOLS.GEMINI, checked: false },
+                { name: 'ChatGPT', value: AI_TOOLS.CHATGPT, checked: false }
             ],
             validate: (answer: string[]): boolean | string => {
                 if (answer.length < 1) {
@@ -107,10 +108,10 @@ export async function promptConfiguration(
 
 function getPromptFilename(ai: string): string {
     const filenames: Record<string, string> = {
-        'claude-code': 'CLAUDE.md',
-        'claude-ai': 'CLAUDE.md',
-        gemini: 'GEMINI.md',
-        chatgpt: 'CHATGPT.md'
+        [AI_TOOLS.CLAUDE_CODE]: PROMPTS.CLAUDE,
+        [AI_TOOLS.CLAUDE_AI]: PROMPTS.CLAUDE,
+        [AI_TOOLS.GEMINI]: PROMPTS.GEMINI,
+        [AI_TOOLS.CHATGPT]: PROMPTS.CHATGPT
     }
 
     return filenames[ai] || `${ai.toUpperCase()}.md`

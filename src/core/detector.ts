@@ -2,15 +2,16 @@ import fs from 'fs-extra'
 import path from 'path'
 import { FRAMEWORKS, LOCK_FILES, PROMPT_FILES } from '@/config/frameworks'
 import { DetectedProject, FrameworkConfig, PackageJson } from '@/types'
+import { FILES } from '@/constants'
 
 export async function detectProject(cwd: string = process.cwd()): Promise<DetectedProject> {
-    const pkgPath = path.join(cwd, 'package.json')
+    const pkgPath = path.join(cwd, FILES.PACKAGE_JSON)
     const pkg = (await fs.pathExists(pkgPath)) ? ((await fs.readJson(pkgPath)) as PackageJson) : null
 
     const [hasGit, hasNodeModules, hasProject, promptFiles] = await Promise.all([
-        fs.pathExists(path.join(cwd, '.git')),
-        fs.pathExists(path.join(cwd, 'node_modules')),
-        fs.pathExists(path.join(cwd, '.project')),
+        fs.pathExists(path.join(cwd, FILES.GIT_DIR)),
+        fs.pathExists(path.join(cwd, FILES.NODE_MODULES)),
+        fs.pathExists(path.join(cwd, FILES.PROJECT_DIR)),
         filterExistingFiles(cwd, PROMPT_FILES)
     ])
 
