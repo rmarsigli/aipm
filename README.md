@@ -35,6 +35,27 @@ npx @rmarsigli/aipm install
 
 > {talk about your task, more details = better AI experience} - Now, plan a task for me to start working on it.
 
+## Features
+
+### 🔒 Safe Update Strategy
+Updates are now reliable and safe. `aipm update` automatically:
+- **Scans** your project for changes.
+- **Backs up** the `.project` directory before touching anything.
+- **Preserves** your customizations (modified files are skipped).
+- **Updates** only pristine files to the latest version.
+
+### 🩺 Doctor (`validate`)
+Ensure your project is healthy with `aipm check` (or `validate`). It checks:
+- Directory structure integrity.
+- Script permissions (smart cross-platform checks).
+- File signature verification (detects legacy or tampered files).
+
+### 📋 Task Automation
+Stop copying templates manually. Use `aipm task init <type> <name>` to:
+- Generate a new task file (`TASK-001-feature.md`) with the correct ID.
+- Sign the file for future updates.
+- Automatically append the task to your `backlog.md`.
+
 ## Structure
 
 The system relies on a simple file structure in your project root:
