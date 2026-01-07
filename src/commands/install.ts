@@ -26,10 +26,14 @@ export async function install(options: InstallOptions = {}): Promise<void> {
     if (options.preset) {
         logger.warn('Preset feature coming soon, using interactive mode')
         config = await promptConfiguration(detected, options)
-    } else if (options.ai && options.guidelines) {
+    } else if (options.ai) {
         config = {
             ais: Array.isArray(options.ai) ? options.ai : [options.ai],
-            guidelines: Array.isArray(options.guidelines) ? options.guidelines : [options.guidelines],
+            guidelines: options.guidelines
+                ? Array.isArray(options.guidelines)
+                    ? options.guidelines
+                    : [options.guidelines]
+                : [],
             version: options.full ? 'full' : 'compact',
             skipConfirmation: options.yes || false,
             dryRun: options.dryRun || false

@@ -54,7 +54,7 @@ program
             await install(options as InstallOptions)
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
-            console.error(chalk.red(`\n❌ Error: ${message}\n`))
+            console.error(chalk.red(`\nError: ${message}\n`))
             process.exit(1)
         }
     })
@@ -63,6 +63,10 @@ program
     .command('update')
     .description('Update existing installation')
     .option('-f, --force', 'Overwrite customizations')
+    .option('--ai <ais...>', 'AI tools to use (claude-code, gemini, chatgpt)')
+    .option('--guidelines <frameworks...>', 'Framework guidelines (react, astro)')
+    .option('--compact', 'Use compact version (default)', true)
+    .option('--full', 'Use full version')
     .option('--dry-run', 'Simulate actions without writing files')
     .action(async (options: unknown) => {
         /* eslint-disable no-console */
@@ -74,7 +78,7 @@ program
             await update(options as UpdateOptions)
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
-            console.error(chalk.red(`\n❌ Error: ${message}\n`))
+            console.error(chalk.red(`\nError: ${message}\n`))
             process.exit(1)
         }
     })
@@ -87,7 +91,7 @@ program
             await diff()
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
-            console.error(chalk.red(`\n❌ Error: ${message}\n`))
+            console.error(chalk.red(`\nError: ${message}\n`))
             process.exit(1)
         }
     })
@@ -100,7 +104,7 @@ program
             await validate()
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
-            console.error(chalk.red(`\n❌ Error: ${message}\n`))
+            console.error(chalk.red(`\nError: ${message}\n`))
             process.exit(1)
         }
     })
