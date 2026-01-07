@@ -2,6 +2,10 @@ import fs from 'fs-extra'
 import path from 'path'
 
 export async function mergeGuidelines(basePrompt: string, guidelines: string[], templatesDir: string): Promise<string> {
+    if (!guidelines || guidelines.length === 0) {
+        return basePrompt
+    }
+
     const guidelineContents: string[] = []
 
     for (const guideline of guidelines) {

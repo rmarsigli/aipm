@@ -27,9 +27,7 @@ export async function installProject(config: InstallConfig, _detected: DetectedP
 
     await createProjectStructure(templatesDir)
 
-    for (const ai of config.ais) {
-        await generatePrompt(ai, config, templatesDir)
-    }
+    await Promise.all(config.ais.map((ai) => generatePrompt(ai, config, templatesDir)))
 
     await makeScriptsExecutable()
 }
@@ -62,9 +60,8 @@ async function createProjectStructure(templatesDir: string): Promise<void> {
     await fs.ensureDir(projectDir)
 
     // Create standard directories
-    for (const dir of PROJECT_STRUCTURE) {
-        await fs.ensureDir(path.join(projectDir, dir))
-    }
+    // Create standard directories
+    await Promise.all(PROJECT_STRUCTURE.map((dir) => fs.ensureDir(path.join(projectDir, dir))))
 
     // Copy templates
     // ... (templates logic remains as it depends on template filenames which are dynamic based on config)
@@ -101,9 +98,11 @@ function getPromptFilename(ai: string): string {
 async function makeScriptsExecutable(): Promise<void> {
     const scripts = ['.project/scripts/pre-session.sh', '.project/scripts/validate-dod.sh']
 
-    for (const script of scripts) {
-        if (await fs.pathExists(script)) {
-            await fs.chmod(script, '755')
-        }
-    }
+    await Promise.all(
+        scripts.map(async (script) => {
+            if (await fs.pathExists(script)) {
+                await fs.chmod(script, '755')
+            }
+        })
+    )
 }

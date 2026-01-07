@@ -80,4 +80,9 @@ describe('mergeGuidelines', () => {
         const result = await mergeGuidelines(basePrompt, ['non-existent-guideline'], tempDir)
         expect(result).toBe(basePrompt)
     })
+
+    test('returns base prompt for undefined guidelines', async () => {
+        const result = await mergeGuidelines(basePrompt, undefined as any, tempDir)
+        expect(result).toBe(basePrompt)
+    })
 })
