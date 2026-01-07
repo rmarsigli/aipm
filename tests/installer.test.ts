@@ -86,6 +86,17 @@ describe('installProject', () => {
         expect(validateStats.mode & 0o111).toBeTruthy()
     })
 
+    test('ignores missing scripts during chmod', async () => {
+        // Mock pathExists to return false for scripts
+        jest.spyOn(fs, 'pathExists').mockImplementation(async (p) => {
+            if (typeof p === 'string' && p.includes('scripts/')) return false
+            return true
+        })
+
+        await installProject(mockConfig, mockDetected)
+        // Should not throw
+    })
+
     test('merges guidelines when provided', async () => {
         const config = { ...mockConfig, guidelines: ['react'] }
         await installProject(config, mockDetected)
