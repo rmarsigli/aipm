@@ -3,7 +3,7 @@ import path from 'path'
 import { mergeGuidelines } from './merger'
 import { InstallConfig, DetectedProject } from '@/types'
 
-export async function installProject(config: InstallConfig, detected: DetectedProject): Promise<void> {
+export async function installProject(config: InstallConfig, _detected: DetectedProject): Promise<void> {
     // Try to find templates relative to the current script
     // In production (dist), it usually is a sibling 'templates'
     // In development (src/core), it is '../templates'

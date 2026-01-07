@@ -1,7 +1,9 @@
-import { FrameworkConfig } from '@/types'
+import { FrameworkConfig, PackageJson } from '@/types'
 import fs from 'fs-extra'
 
-const hasDep = (pkg: any, name: string): boolean => pkg?.dependencies?.[name] || pkg?.devDependencies?.[name]
+const hasDep = (pkg: PackageJson, name: string): boolean => {
+    return !!(pkg?.dependencies?.[name] || pkg?.devDependencies?.[name])
+}
 const hasFile = (filename: string): boolean => fs.pathExistsSync(filename)
 
 export const FRAMEWORKS: FrameworkConfig[] = [

@@ -1,6 +1,6 @@
+/* eslint-disable no-console */
 import inquirer from 'inquirer'
 import chalk from 'chalk'
-import { getFrameworkDisplayName } from '@/core/detector'
 import { DetectedProject, InstallConfig } from '@/types'
 
 export async function promptConfiguration(
@@ -9,7 +9,7 @@ export async function promptConfiguration(
 ): Promise<InstallConfig | null> {
     console.log(chalk.blue('\n📋 Installation Options\n'))
 
-    const { ais } = await inquirer.prompt([
+    const { ais } = await inquirer.prompt<{ ais: string[] }>([
         {
             type: 'checkbox',
             name: 'ais',
@@ -20,7 +20,7 @@ export async function promptConfiguration(
                 { name: 'Google Gemini', value: 'gemini', checked: false },
                 { name: 'ChatGPT', value: 'chatgpt', checked: false }
             ],
-            validate: (answer: string[]) => {
+            validate: (answer: string[]): boolean | string => {
                 if (answer.length < 1) {
                     return 'You must choose at least one AI tool.'
                 }
@@ -36,7 +36,7 @@ export async function promptConfiguration(
         { name: 'Vue', value: 'vue', checked: detected.framework === 'vue' }
     ]
 
-    const { guidelines } = await inquirer.prompt([
+    const { guidelines } = await inquirer.prompt<{ guidelines: string[] }>([
         {
             type: 'checkbox',
             name: 'guidelines',
@@ -45,7 +45,7 @@ export async function promptConfiguration(
         }
     ])
 
-    const { version } = await inquirer.prompt([
+    const { version } = await inquirer.prompt<{ version: 'compact' | 'full' }>([
         {
             type: 'list',
             name: 'version',
@@ -83,7 +83,7 @@ export async function promptConfiguration(
             existingFiles.forEach((f: string) => console.log(chalk.yellow(`   • ${f}`)))
         }
 
-        const { confirm } = await inquirer.prompt([
+        const { confirm } = await inquirer.prompt<{ confirm: boolean }>([
             {
                 type: 'confirm',
                 name: 'confirm',

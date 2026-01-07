@@ -1,9 +1,17 @@
+/* eslint-disable no-console */
 import chalk from 'chalk'
+import { UpdateOptions } from '@/types'
+import { install } from './install'
 
-export async function update(options: any = {}): Promise<void> {
-    console.log(chalk.yellow('\n⚠️  Update command coming in v1.1!\n'))
-    console.log('For now, to update:')
-    console.log(chalk.gray('  1. Backup your customizations'))
-    console.log(chalk.gray('  2. Run: npx ia-project-manager install --yes'))
-    console.log(chalk.gray('  3. Restore your customizations\n'))
+export async function update(options: UpdateOptions = {}): Promise<void> {
+    console.log(chalk.blue('Updating AIPM...'))
+
+    // For now, update is essentially a re-install
+    // In the future, this will be smarter about preserving custom content
+    await install({
+        ...options,
+        yes: options.yes || options.force
+    })
+
+    console.log(chalk.green('\n✅ Update completed'))
 }

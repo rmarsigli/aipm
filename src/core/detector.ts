@@ -1,11 +1,11 @@
 import fs from 'fs-extra'
 import path from 'path'
 import { FRAMEWORKS, LOCK_FILES, PROMPT_FILES } from '@/config/frameworks'
-import { DetectedProject, FrameworkConfig } from '@/types'
+import { DetectedProject, FrameworkConfig, PackageJson } from '@/types'
 
 export async function detectProject(cwd: string = process.cwd()): Promise<DetectedProject> {
     const pkgPath = path.join(cwd, 'package.json')
-    const pkg = (await fs.pathExists(pkgPath)) ? await fs.readJson(pkgPath) : null
+    const pkg = (await fs.pathExists(pkgPath)) ? ((await fs.readJson(pkgPath)) as PackageJson) : null
 
     const [hasGit, hasNodeModules, hasProject, promptFiles] = await Promise.all([
         fs.pathExists(path.join(cwd, '.git')),
@@ -29,7 +29,7 @@ export async function detectProject(cwd: string = process.cwd()): Promise<Detect
     }
 }
 
-function detectFramework(pkg: any): { framework: string | null; frameworkVersion: string | null } {
+function detectFramework(pkg: PackageJson | null): { framework: string | null; frameworkVersion: string | null } {
     if (!pkg) return { framework: null, frameworkVersion: null }
 
     const match = FRAMEWORKS.find((sig: FrameworkConfig) => sig.check(pkg))
@@ -51,7 +51,8 @@ async function detectPackageManager(cwd: string): Promise<string | null> {
     return null
 }
 
-const getDepVersion = (pkg: any, name: string): string => pkg?.dependencies?.[name] || pkg?.devDependencies?.[name]
+const getDepVersion = (pkg: PackageJson, name: string): string =>
+    pkg?.dependencies?.[name] || pkg?.devDependencies?.[name] || ''
 
 async function filterExistingFiles(cwd: string, files: string[]): Promise<string[]> {
     const existing: string[] = []

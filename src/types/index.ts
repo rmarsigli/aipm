@@ -1,8 +1,14 @@
+export interface PackageJson {
+    dependencies?: Record<string, string>
+    devDependencies?: Record<string, string>
+    [key: string]: unknown
+}
+
 export interface FrameworkConfig {
     id: string
     name: string
     template: string
-    check: (pkg: any) => boolean
+    check: (pkg: PackageJson) => boolean
 }
 
 export interface DetectedProject {
@@ -22,4 +28,18 @@ export interface InstallConfig {
     guidelines: string[]
     version: 'compact' | 'full'
     skipConfirmation: boolean
+}
+
+export interface InstallOptions {
+    yes?: boolean
+    preset?: string
+    ai?: string[]
+    guidelines?: string[]
+    compact?: boolean
+    full?: boolean
+}
+
+export interface UpdateOptions {
+    force?: boolean
+    yes?: boolean
 }

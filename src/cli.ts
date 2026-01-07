@@ -2,8 +2,11 @@
 
 import { Command } from 'commander'
 import chalk from 'chalk'
+import { InstallOptions, UpdateOptions } from '@/types'
 import { install } from './commands/install'
 import { update } from './commands/update'
+import { diff } from './commands/diff'
+import { validate } from './commands/validate'
 import { version } from './version'
 
 const program = new Command()
@@ -17,10 +20,7 @@ const banner = `
 ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝     ╚═╝
 `
 
-program
-    .name('aipm')
-    .description('AI-optimized project management system')
-    .version(version)
+program.name('aipm').description('AI-optimized project management system').version(version)
 
 program
     .command('install')
@@ -31,14 +31,15 @@ program
     .option('--guidelines <frameworks...>', 'Framework guidelines (react, astro)')
     .option('--compact', 'Use compact version (default)', true)
     .option('--full', 'Use full version')
-    .action(async (options) => {
+    .action(async (options: unknown) => {
         console.log(chalk.blue(banner))
         console.log(chalk.blue(`AIPM v${version}\n`))
-        
+
         try {
-            await install(options)
-        } catch (error: any) {
-            console.error(chalk.red(`\n❌ Error: ${error.message}\n`))
+            await install(options as InstallOptions)
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\n❌ Error: ${message}\n`))
             process.exit(1)
         }
     })
@@ -47,14 +48,15 @@ program
     .command('update')
     .description('Update existing installation')
     .option('-f, --force', 'Overwrite customizations')
-    .action(async (options) => {
+    .action(async (options: unknown) => {
         console.log(chalk.blue(banner))
         console.log(chalk.blue(`AIPM v${version}\n`))
-        
+
         try {
-            await update(options)
-        } catch (error: any) {
-            console.error(chalk.red(`\n❌ Error: ${error.message}\n`))
+            await update(options as UpdateOptions)
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\n❌ Error: ${message}\n`))
             process.exit(1)
         }
     })
@@ -63,14 +65,26 @@ program
     .command('diff')
     .description('Show what would change with update')
     .action(async () => {
-        console.log(chalk.yellow('\n🔍 Diff command coming soon!\n'))
+        try {
+            await diff()
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\n❌ Error: ${message}\n`))
+            process.exit(1)
+        }
     })
 
 program
     .command('validate')
     .description('Validate current installation')
     .action(async () => {
-        console.log(chalk.yellow('\n🔍 Validate command coming soon!\n'))
+        try {
+            await validate()
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\n❌ Error: ${message}\n`))
+            process.exit(1)
+        }
     })
 
 program.parse(process.argv)
