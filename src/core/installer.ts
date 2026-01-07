@@ -4,6 +4,7 @@ import { mergeGuidelines } from './merger.js'
 import { InstallConfig, DetectedProject } from '@/types/index.js'
 import { FILES, PROJECT_STRUCTURE } from '@/constants.js'
 import { logger } from '@/utils/logger.js'
+import { signatureManager } from '@/core/signature.js'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
@@ -107,10 +108,13 @@ async function generatePrompt(ai: string, config: InstallConfig, templatesDir: s
 
     const filename = getPromptFilename(ai)
 
+    // Sign the content
+    const signedPrompt = signatureManager.sign(basePrompt)
+
     if (config.dryRun) {
-        logger.info(`[DRY RUN] Would write prompt file: ${filename} (${basePrompt.length} bytes)`)
+        logger.info(`[DRY RUN] Would write prompt file: ${filename} (${signedPrompt.length} bytes)`)
     } else {
-        await fs.writeFile(filename, basePrompt, 'utf-8')
+        await fs.writeFile(filename, signedPrompt, 'utf-8')
     }
 }
 
@@ -139,4 +143,35 @@ async function makeScriptsExecutable(dryRun?: boolean): Promise<void> {
             }
         })
     )
+}
+
+/**
+ * Creates a backup of the .project directory.
+ * @returns The path to the backup directory or null if dry run/no backup needed
+ */
+export async function createBackup(projectRoot: string, dryRun?: boolean): Promise<string | null> {
+    const projectDir = path.join(projectRoot, FILES.PROJECT_DIR)
+
+    if (!(await fs.pathExists(projectDir))) {
+        return null
+    }
+
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-')
+    // Use a sibling directory for backups to avoid recursive copy issues
+    const backupDir = path.join(projectRoot, '.project-backups', timestamp)
+
+    if (dryRun) {
+        logger.info(`[DRY RUN] Would backup .project to ${backupDir}`)
+        return backupDir
+    }
+
+    logger.debug(`Backing up .project to ${backupDir}`)
+    await fs.ensureDir(path.dirname(backupDir))
+
+    // Copy everything except node_modules or huge folders if they existed there (unlikely in .project)
+    await fs.copy(projectDir, backupDir, {
+        filter: (src) => !src.includes('.backup') // Prevent recursive backup
+    })
+
+    return backupDir
 }

@@ -57,6 +57,8 @@ describe('installProject', () => {
         expect(await fs.pathExists('CLAUDE.md')).toBe(true)
         const content = await fs.readFile('CLAUDE.md', 'utf-8')
         expect(content).toContain('Project Management System')
+        expect(content).toContain('<!-- @aipm-signature:')
+        expect(content).toContain('<!-- @aipm-version:')
     })
 
     test('creates GEMINI.md for gemini', async () => {

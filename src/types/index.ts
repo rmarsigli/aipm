@@ -45,4 +45,8 @@ export interface UpdateOptions {
     force?: boolean
     dryRun?: boolean
     yes?: boolean
+    ai?: string[]
+    guidelines?: string[]
+    compact?: boolean
+    full?: boolean
 }

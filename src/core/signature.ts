@@ -1,0 +1,71 @@
+import crypto from 'crypto'
+import { version } from '@/version.js'
+
+export type FileStatus = 'pristine' | 'modified' | 'legacy' | 'missing'
+
+interface FileMetadata {
+    signature: string
+    version: string
+    strategy?: string
+}
+
+export class SignatureManager {
+    private static readonly SIG_PREFIX = '<!-- @aipm-signature:'
+    private static readonly VER_PREFIX = '<!-- @aipm-version:'
+
+    public sign(content: string, _strategy: string = 'overwrite-if-unchanged'): string {
+        const cleanContent = this.stripMetadata(content)
+        const hash = this.calculateHash(cleanContent)
+
+        // Ensure content ends with newline before appending metadata
+        const spacer = cleanContent.endsWith('\n') ? '' : '\n'
+
+        return `${cleanContent}${spacer}
+${SignatureManager.SIG_PREFIX} ${hash} -->
+${SignatureManager.VER_PREFIX} ${version} -->
+`
+    }
+
+    /**
+     * Verifies if the file content matches its embedded signature.
+     */
+    public verify(content: string): FileStatus {
+        const metadata = this.extractMetadata(content)
+
+        if (!metadata) {
+            return 'legacy'
+        }
+
+        const cleanContent = this.stripMetadata(content)
+        const currentHash = this.calculateHash(cleanContent)
+
+        return currentHash === metadata.signature ? 'pristine' : 'modified'
+    }
+
+    private stripMetadata(content: string): string {
+        // Regex to match our specific comments at the end of the file
+        // Handles optional newlines before them
+        const sigRegex = new RegExp(`\\n${SignatureManager.SIG_PREFIX}.*?-->`, 'g')
+        const verRegex = new RegExp(`\\n${SignatureManager.VER_PREFIX}.*?-->`, 'g')
+
+        return content.replace(sigRegex, '').replace(verRegex, '').trim()
+    }
+
+    private extractMetadata(content: string): FileMetadata | null {
+        const sigMatch = content.match(new RegExp(`${SignatureManager.SIG_PREFIX}\\s+([a-f0-9]+)\\s+-->`))
+        const verMatch = content.match(new RegExp(`${SignatureManager.VER_PREFIX}\\s+([0-9.]+)\\s+-->`))
+
+        if (!sigMatch) return null
+
+        return {
+            signature: sigMatch[1],
+            version: verMatch ? verMatch[1] : '0.0.0'
+        }
+    }
+
+    private calculateHash(content: string): string {
+        return crypto.createHash('sha256').update(content.trim()).digest('hex')
+    }
+}
+
+export const signatureManager = new SignatureManager()
