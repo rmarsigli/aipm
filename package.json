@@ -4,7 +4,7 @@
     "access": "public"
   },
   "type": "module",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Markdown-based project management system optimized for AI-assisted development",
   "homepage": "https://github.com/rmarsigli/aipm",
   "bugs": {
@@ -20,6 +20,11 @@
   "bin": {
     "aipm": "./dist/cli.js"
   },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md"
+  ],
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
