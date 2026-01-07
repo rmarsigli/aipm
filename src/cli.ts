@@ -4,8 +4,7 @@ import { Command } from 'commander'
 import chalk from 'chalk'
 import { install } from './commands/install'
 import { update } from './commands/update'
-// @ts-ignore
-import { version } from '../package.json'
+import { version } from './version'
 
 const program = new Command()
 

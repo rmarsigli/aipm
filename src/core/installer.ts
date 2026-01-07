@@ -8,7 +8,7 @@ export async function installProject(config: InstallConfig, detected: DetectedPr
     // In production (dist), it usually is a sibling 'templates'
     // In development (src/core), it is '../templates'
     let templatesDir = path.join(__dirname, 'templates')
-    
+
     if (!fs.existsSync(templatesDir)) {
         templatesDir = path.join(__dirname, '../templates')
     }
@@ -17,9 +17,11 @@ export async function installProject(config: InstallConfig, detected: DetectedPr
         // Fallback for when running from root or unexpected structure
         templatesDir = path.join(process.cwd(), 'src/templates')
     }
-    
+
     if (!fs.existsSync(templatesDir)) {
-        throw new Error(`Templates directory not found. Searched in: ${path.join(__dirname, 'templates')} and ${path.join(__dirname, '../templates')}`)
+        throw new Error(
+            `Templates directory not found. Searched in: ${path.join(__dirname, 'templates')} and ${path.join(__dirname, '../templates')}`
+        )
     }
 
     await createProjectStructure(templatesDir)
@@ -42,7 +44,7 @@ async function createProjectStructure(templatesDir: string): Promise<void> {
         })
     } catch (error) {
         const err = error as { code?: string }
-        
+
         if (err.code === 'EACCES') {
             throw new Error(`Permission denied: Cannot write to ${targetDir}`)
         }
@@ -53,14 +55,7 @@ async function createProjectStructure(templatesDir: string): Promise<void> {
         throw error
     }
 
-    const dirs = [
-        'backlog',
-        'completed',
-        'decisions',
-        'docs',
-        'ideas',
-        'reports'
-    ]
+    const dirs = ['backlog', 'completed', 'decisions', 'docs', 'ideas', 'reports']
 
     for (const dir of dirs) {
         await fs.ensureDir(path.join(targetDir, dir))
@@ -70,7 +65,7 @@ async function createProjectStructure(templatesDir: string): Promise<void> {
 async function generatePrompt(ai: string, config: InstallConfig, templatesDir: string): Promise<void> {
     const basePath = path.join(templatesDir, 'base/project-manager.md')
     let basePrompt = await fs.readFile(basePath, 'utf-8')
-    
+
     if (config.guidelines && config.guidelines.length > 0) {
         basePrompt = await mergeGuidelines(basePrompt, config.guidelines, templatesDir)
     }
@@ -84,18 +79,15 @@ function getPromptFilename(ai: string): string {
     const filenames: Record<string, string> = {
         'claude-code': 'CLAUDE.md',
         'claude-ai': 'CLAUDE.md',
-        'gemini': 'GEMINI.md',
-        'chatgpt': 'CHATGPT.md'
+        gemini: 'GEMINI.md',
+        chatgpt: 'CHATGPT.md'
     }
 
     return filenames[ai] || `${ai.toUpperCase()}.md`
 }
 
 async function makeScriptsExecutable(): Promise<void> {
-    const scripts = [
-        '.project/scripts/pre-session.sh',
-        '.project/scripts/validate-dod.sh'
-    ]
+    const scripts = ['.project/scripts/pre-session.sh', '.project/scripts/validate-dod.sh']
 
     for (const script of scripts) {
         if (await fs.pathExists(script)) {
