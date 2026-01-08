@@ -1,5 +1,3 @@
-import fs from 'fs-extra'
-import path from 'path'
 import { logger } from '@/utils/logger.js'
 
 /**
@@ -10,6 +8,8 @@ import { logger } from '@/utils/logger.js'
  * @param templatesDir - Path to the templates directory
  * @returns The merged prompt content
  */
+import { guidelineRegistry } from './guidelines.js'
+
 export async function mergeGuidelines(basePrompt: string, guidelines: string[], templatesDir: string): Promise<string> {
     if (!guidelines || guidelines.length === 0) {
         return basePrompt
@@ -18,12 +18,12 @@ export async function mergeGuidelines(basePrompt: string, guidelines: string[], 
     logger.debug(`Merging guidelines: ${guidelines.join(', ')}`)
     const guidelineContents: string[] = []
 
-    for (const guideline of guidelines) {
-        const guidelinePath = path.join(templatesDir, `guidelines/${guideline}.md`)
-
-        if (await fs.pathExists(guidelinePath)) {
-            const content = await fs.readFile(guidelinePath, 'utf-8')
+    for (const guidelineId of guidelines) {
+        try {
+            const content = await guidelineRegistry.resolveTemplate(guidelineId, templatesDir)
             guidelineContents.push(content)
+        } catch (error) {
+            logger.warn(`Failed to resolve guideline '${guidelineId}': ${(error as Error).message}`)
         }
     }
 

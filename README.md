@@ -44,6 +44,12 @@ Updates are now reliable and safe. `aipm update` automatically:
 - **Preserves** your customizations (modified files are skipped).
 - **Updates** only pristine files to the latest version.
 
+### 📐 Framework Guidelines
+Stop pasting context manually. `aipm install` now:
+- **Detects** your technology stack (e.g. Next.js, Astro, Vue, Node.js).
+- **Injects** optimized official guidelines into your AI rules (`CLAUDE.md`, etc).
+- **Ensures** AI follows project-specific coding standards automatically.
+
 ### 🩺 Doctor (`validate`)
 Ensure your project is healthy with `aipm check` (or `validate`). It checks:
 - Directory structure integrity.

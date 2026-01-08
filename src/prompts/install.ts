@@ -3,6 +3,7 @@ import chalk from 'chalk'
 import { DetectedProject, InstallConfig } from '@/types/index.js'
 import { AI_TOOLS, PROMPTS } from '@/constants.js'
 import { logger } from '@/utils/logger.js'
+import { guidelineRegistry } from '@/core/guidelines.js'
 
 export async function promptConfiguration(
     detected: DetectedProject,
@@ -30,12 +31,12 @@ export async function promptConfiguration(
         }
     ])
 
-    const guidelineChoices = [
-        { name: 'React', value: 'react', checked: detected.framework?.includes('react') },
-        { name: 'Astro', value: 'astro', checked: detected.framework === 'astro' },
-        { name: 'Next.js', value: 'nextjs', checked: detected.framework === 'nextjs' },
-        { name: 'Vue', value: 'vue', checked: detected.framework === 'vue' }
-    ]
+    const allGuidelines = guidelineRegistry.list()
+    const guidelineChoices = allGuidelines.map((g) => ({
+        name: g.name,
+        value: g.id,
+        checked: detected.framework === g.id || detected.framework?.includes(g.id)
+    }))
 
     const { guidelines } = await inquirer.prompt<{ guidelines: string[] }>([
         {

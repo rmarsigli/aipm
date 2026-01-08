@@ -1,21 +1,32 @@
-## Next.js with TypeScript Development Guidelines
+# Next.js / React Guidelines (App Router)
 
-### MANDATORY CODING STANDARDS - NEVER VIOLATE THESE:
-1. **ALWAYS** write everything in **INTERNATIONAL ENGLISH**
-2. **NEVER** add semicolons at the end of lines
-3. **ALL** files must be kebab-case (e.g., `my-component.tsx`), EXCEPT for reserved Next.js App Router files (`page.tsx`, `layout.tsx`, `loading.tsx`)
-4. **NO** inline comments, avoid **AVOID** comments unless absolutely necessary
-5. In `.ts` and `.tsx` files **ALWAYS** use tab for indentation with size 4
-6. **NO** trailing commas in objects/arrays
-7. Tailwind classes **ONLY**, no CSS Modules unless absolutely necessary
-8. **STRICT TYPE!** I want a strong typing code
-9. **MODERN** approach: App Router (`app/` dir), Server Components by default
-10. **NEVER** create solo .md files in root
+## Core Principles
+- **Languages**: TypeScript + React 19 (Server Components).
+- **Naming**: 
+  - Files: `kebab-case` (e.g., `user-profile.tsx`).
+  - Components: `PascalCase`.
+  - Functions: `camelCase`.
+- **Semicolons**: **NO SEMICOLONS**. (Strict project rule).
 
-### NEXT.JS SPECIFIC:
-- **App Router**: Use `app/` directory structure strictly
-- **Server Components**: Keep components server-side unless `use client` is needed
-- **Data Fetching**: Use `fetch` with caching options or Server Actions
-- **Forms**: Use Server Actions for mutations
-- **Metadata**: Use `generateMetadata` for dynamic SEO
-- **Images**: Use `next/image` component strictly
+## Project Structure (App Router)
+- `app/`: Routes and Layouts using reserved filenames (`page.tsx`, `layout.tsx`).
+- `components/`: Reusable UI components.
+- `lib/` or `utils/`: Helpers and business logic.
+- `styles/`: Global CSS/Tailwind configuration.
+
+## Coding Standards
+- **Server First**: Components are Server Components by default. Add `'use client'` only for interactivity (hooks, event listeners).
+- **Data Fetching**: Use `await fetch()` in Server Components. Avoid `useEffect` for data fetching.
+- **Mutations**: Use **Server Actions** (`'use server'`) for form submissions and side effects.
+- **State**: Use URL search params for state where possible (sharable URLs). Use `useQuery` or Context for complex client state.
+
+## Styling
+- **Tailwind CSS**: Primary styling engine. utility-first.
+- **Class Sorting**: Use `prettier-plugin-tailwindcss` to enforce class order.
+- **Responsive**: Mobile-first approach (`<div class="block md:flex">`).
+
+## Testing & Performance
+- **Images**: Always use `next/image` with explicit width/height or fill.
+- **Fonts**: Use `next/font` to optimized loading.
+- **SEO**: Use `export const metadata` or `generateMetadata`.
+

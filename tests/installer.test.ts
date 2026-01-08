@@ -4,10 +4,15 @@ import { InstallConfig, DetectedProject } from '../src/types/index.js'
 import fs from 'fs-extra'
 import path from 'path'
 import { describe, test, expect, beforeEach, afterEach, jest } from '@jest/globals'
+import { guidelineRegistry } from '../src/core/guidelines.js'
+
+// Mock content for templates
+const MOCK_TEMPLATE = '## React Guidelines'
 
 describe('installProject', () => {
     let tempDir: string
     let originalCwd: string
+    let resolveSpy: any
 
     const mockDetected: DetectedProject = {
         framework: 'react',
@@ -32,9 +37,13 @@ describe('installProject', () => {
         originalCwd = process.cwd()
         tempDir = await createTempDir()
         process.chdir(tempDir)
+        
+        // Spy on the real registry instance
+        resolveSpy = jest.spyOn(guidelineRegistry, 'resolveTemplate').mockResolvedValue(MOCK_TEMPLATE)
     })
 
     afterEach(async () => {
+        if (resolveSpy) resolveSpy.mockRestore()
         process.chdir(originalCwd)
         await cleanupTempDir(tempDir)
     })

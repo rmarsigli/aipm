@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2026-01-07
+### Added
+- **Framework Guidelines System**: Auto-detects project framework (`react`, `next`, `vue`, `astro`, `node`) and configures AI prompts with strict, best-practice guidelines.
+- **CLI Options**: Added `--guidelines <name>` to manually specify frameworks during install/update.
+- **Safe Operational Cycle**: Implemented `SignatureManager` and transactional updates to protect user modifications. Files are now hashed and only safely updated if pristine.
+- **E2E Testing**: Comprehensive end-to-end test suite (`pnpm test:e2e`) verifying real-world usage.
+- **Developer Experience**: Added `pnpm start` for local development.
+
+### Fixed
+- **Unit Tests**: Full pass on `installer.test.ts` (mocking issues resolved) and `updater.test.ts`.
+- **Test Noise**: Suppressed expected warnings during test runs for cleaner output.
+
 ## [1.0.5] - 2026-01-07
 ### Changed
 - **Packaging**: Switched from `.npmignore` (denylist) to `files` in `package.json` (allowlist) for more secure and predictable artifact publishing.

@@ -1,9 +1,10 @@
 import { updater } from '../src/core/updater.js'
 import { createTempDir, cleanupTempDir } from './setup.js'
+import { logger } from '../src/utils/logger.js'
 import { signatureManager } from '../src/core/signature.js'
 import fs from 'fs-extra'
 import path from 'path'
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { describe, test, expect, beforeEach, afterEach, jest } from '@jest/globals'
 import { InstallConfig } from '../src/types/index.js'
 
 describe('Updater', () => {
@@ -20,6 +21,7 @@ describe('Updater', () => {
         tempDir = await createTempDir()
         // Mock process.cwd to be tempDir so scanner finds files
         // But we passed projectRoot to updater, so it should be fine.
+        jest.spyOn(logger, 'warn').mockImplementation(() => {})
     })
 
     afterEach(async () => {

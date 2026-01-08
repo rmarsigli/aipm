@@ -2,17 +2,32 @@ import { mergeGuidelines } from '../src/core/merger.js'
 import { createTempDir, cleanupTempDir } from './setup.js'
 import fs from 'fs-extra'
 import path from 'path'
-import { describe, test, expect, beforeEach, afterEach } from '@jest/globals'
+import { describe, test, expect, beforeEach, afterEach, jest } from '@jest/globals'
+import { guidelineRegistry } from '../src/core/guidelines.js'
+import { logger } from '../src/utils/logger.js'
 
 describe('mergeGuidelines', () => {
     let tempDir: string
+    let resolveSpy: any
 
     beforeEach(async () => {
         tempDir = await createTempDir()
         await fs.ensureDir(path.join(tempDir, 'guidelines'))
+
+        // Suppress warn logs
+        jest.spyOn(logger, 'warn').mockImplementation(() => {})
+
+        resolveSpy = jest.spyOn(guidelineRegistry, 'resolveTemplate').mockImplementation(async (id: string, dir: string) => {
+            const p = path.join(dir, 'guidelines', `${id}.md`)
+            if (await fs.pathExists(p)) {
+                return await fs.readFile(p, 'utf-8')
+            }
+            throw new Error(`Guideline '${id}' not found.`)
+        })
     })
 
     afterEach(async () => {
+        resolveSpy.mockRestore()
         await cleanupTempDir(tempDir)
     })
 

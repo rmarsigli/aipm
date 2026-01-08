@@ -4,7 +4,7 @@
     "access": "public"
   },
   "type": "module",
-  "version": "1.0.5",
+  "version": "1.1.0",
   "description": "Markdown-based project management system optimized for AI-assisted development",
   "homepage": "https://github.com/rmarsigli/aipm",
   "bugs": {
@@ -30,6 +30,7 @@
   },
   "scripts": {
     "dev": "tsup --watch",
+    "start": "node dist/cli.js",
     "build": "tsup",
     "type-check": "tsc --noEmit",
     "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest",
