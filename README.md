@@ -1,5 +1,15 @@
 # AIPIM: Project Instruction Manager
 
+```text
+    ▄▄█▄▄      █████╗ ██╗██████╗ ██╗███╗   ███╗
+  ▀▀▀███▀▀▀   ██╔══██╗██║██╔══██╗██║████╗ ████║
+     ███      ███████║██║██████╔╝██║██╔████╔██║
+   ▄█████▄    ██╔══██║██║██╔═══╝ ██║██║╚██╔╝██║
+  ▐███████▌   ██║  ██║██║██║     ██║██║ ╚═╝ ██║
+   ▀█████▀    ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚═╝     ╚═╝
+     ▀█▀      ═════════════════════════════════
+```
+
 > **Artificial Intelligence Project Instruction Manager — The root of your AI-assisted workflow.**
 
 AIPIM acts as the interface layer between your project and your AI coding assistant (Claude, ChatGPT, Gemini). It manages the "root" instructions—context, guidelines, and memory—ensuring your AI always knows *how* to work on your codebase without hallucinating or forgetting rules.

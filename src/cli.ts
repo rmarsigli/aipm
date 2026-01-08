@@ -13,17 +13,20 @@ import { logger } from '@/utils/logger.js'
 const program = new Command()
 
 const banner = `
-    _    ___ ____ ___ __  __
-   / \\  |_ _|  _ \\_ _|  \\/  |
-  / _ \\  | || |_) | || |\\/| |
- / ___ \\ | ||  __/| || |  | |
-/_/   \\_\\___|_|  |___|_|  |_|
+    ▄▄█▄▄      █████╗ ██╗██████╗ ██╗███╗   ███╗
+  ▀▀▀███▀▀▀   ██╔══██╗██║██╔══██╗██║████╗ ████║
+     ███      ███████║██║██████╔╝██║██╔████╔██║
+   ▄█████▄    ██╔══██║██║██╔═══╝ ██║██║╚██╔╝██║
+  ▐███████▌   ██║  ██║██║██║     ██║██║ ╚═╝ ██║
+   ▀█████▀    ╚═╝  ╚═╝╚═╝╚═╝     ╚═╝╚═╝     ╚═╝
+     ▀█▀      ═════════════════════════════════
 `
 
 program
     .name('aipim')
     .description('Artificial Intelligence Project Instruction Manager')
     .version(version)
+    .addHelpText('before', chalk.blue(banner))
     .option('-v, --verbose', 'Enable verbose logging')
     .hook('preAction', (thisCommand) => {
         const options = thisCommand.opts()
