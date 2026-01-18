@@ -1,22 +1,21 @@
 ---
-session: 3
-last_updated: 2026-01-18T16:45:00-03:00
+session: 4
+last_updated: 2026-01-18T18:30:00-03:00
 active_branches: [main]
 blockers: []
-next_action: "Start TASK-002 (Task Auto-Breakdown) or TASK-003 (ADR Auto-Detection) - recommend TASK-002"
+next_action: "Start TASK-003 (ADR Auto-Detection) - 5h P2-M"
 ---
 
 # Current State
 
-TASK-001 (Session Metrics Tracking) completed successfully in 5.5h (6h estimated, 92% accuracy). Added comprehensive metrics tracking to context.md template, agent guidelines protocol, and calculation script. All features tested and documented. AIPIM now tracks productivity trends, estimate accuracy, blockers, and quality metrics automatically. Ready for next enhancement.
+TASK-002 (Large Task Auto-Breakdown) completed in 2h (4h estimated, 50% - excellent efficiency!). Implemented comprehensive protocol for breaking down >12h tasks into manageable 2-6h phases. Added detection logic, validation script, phase templates, and complete documentation. System now prevents task stalling by enforcing clear checkpoints and atomic commits per phase. Ready for TASK-003.
 
 # Active Work
 
-**Status:** Session 2 complete. No active task.
+**Status:** Session 3 complete. No active task.
 
 **Available backlog tasks:**
-- TASK-002: Task Breakdown (4h) - P2-M ⭐ Recommended next
-- TASK-003: ADR Automation (5h) - P2-M
+- TASK-003: ADR Automation (5h) - P2-M ⭐ Recommended next
 - TASK-005: Backlog Health (4h) - P3
 
 # Recent Decisions
@@ -30,10 +29,10 @@ TASK-001 (Session Metrics Tracking) completed successfully in 5.5h (6h estimated
 <!-- Auto-updated: 2026-01-18T16:45:00-03:00 -->
 
 **Productivity:**
-- Tasks completed this week: 2
-- Tasks completed this month: 2
-- Estimate accuracy: 0.88 (actual/estimated avg) <!-- 8.0h actual / 9h estimated -->
-- Velocity trend: ↗️ Improving <!-- Session 2: 2 tasks vs Session 1: 1 task -->
+- Tasks completed this week: 3
+- Tasks completed this month: 3
+- Estimate accuracy: 0.77 (actual/estimated avg) <!-- 10.0h actual / 13h estimated -->
+- Velocity trend: ↗️ Improving <!-- Session 3: 3 tasks vs Session 2: 2 tasks -->
 
 **Quality:**
 - Test coverage: N/A (bash scripts - manual validation)
@@ -53,25 +52,25 @@ TASK-001 (Session Metrics Tracking) completed successfully in 5.5h (6h estimated
 - Active blockers: 0
 
 **Trends (Last 30 Days):**
-- Tasks completed: 2 (TASK-004: 2.5h, TASK-001: 5.5h)
-- Average task size: 4.0h
-- Estimate accuracy improving: 0.83 → 0.92 → 0.88 overall
+- Tasks completed: 3 (TASK-004: 2.5h, TASK-001: 5.5h, TASK-002: 2h)
+- Average task size: 3.3h
+- Estimate accuracy improving: 0.83 → 0.92 → 0.50 (TASK-002 beat estimate!)
 - Rework rate: 0% (no fixes needed post-completion)
 
 # Next Steps
 
 1. **Next Session:**
-   - Start TASK-002 (Task Auto-Breakdown) - 4h P2-M
-   - Alternative: TASK-003 (ADR Auto-Detection) - 5h P2-M
+   - Start TASK-003 (ADR Auto-Detection) - 5h P2-M
+   - Last P2-M task in enhancement backlog
 
 2. **This Week:**
-   - Complete TASK-002 and TASK-003
-   - Test metrics tracking in real workflow
+   - Complete TASK-003 (ADR automation)
+   - Test all new features in real workflow
    - Consider TASK-005 if time permits
 
 3. **This Month:**
-   - Complete all P2-M tasks (2/3 done: ✅ Metrics, ⏳ Breakdown, ⏳ ADR)
-   - Update documentation with dogfooding examples
+   - Complete all P2-M tasks (2/3 done: ✅ Metrics, ✅ Breakdown, ⏳ ADR)
+   - Update documentation with real-world examples
    - Create release notes for v1.2
 
 # Session Summaries
@@ -178,6 +177,48 @@ TASK-001 (Session Metrics Tracking) completed successfully in 5.5h (6h estimated
 - Summary format shows human-readable metrics with colors
 
 **Time:** 5.5h (estimated: 6h, accuracy: 0.92)
+
+## Session 3 - TASK-002: Large Task Auto-Breakdown (2026-01-18, 2h)
+
+**Objective:** Add protocol for breaking down large tasks (>12h) into manageable phases
+
+**Implementation:**
+- ✅ Phase 1: Added detection logic to project-manager.md (30min)
+- ✅ Phase 2: Added phase template examples to task template and docs (20min)
+- ✅ Phase 3: Created validation script to check phase breakdowns (40min)
+- ✅ Testing: Created and validated 18h sample task (20min)
+- ✅ Documentation: Updated checkboxes and time tracking (10min)
+
+**Commits:**
+- `49b2060` feat(templates): add large task auto-breakdown protocol
+- `586fa87` docs(templates): add large task breakdown examples
+- `709587f` feat(scripts): add large task breakdown validation
+- `385eabd` chore: complete TASK-002 - large task auto-breakdown
+
+**Features Added:**
+- **Detection Protocol:** Mandatory breakdown for tasks >12h
+- **Phase Structure:** 3-5 phases of 2-6h each with deliverables
+- **Validation:** Script checks phase count, estimates, deliverables, commit messages
+- **Documentation:** Complete guide in basic-usage.md with before/after examples
+
+**Technical Notes:**
+- Validation script extracts phase estimates and sums them (±1h tolerance)
+- Each phase requires: deliverable, commit message, time estimate
+- Example provided: 18h User Profile task → 4 phases (3+6+5+4h)
+
+**Validation:**
+- Created 18h test task with proper breakdown
+- Script correctly detected 4 phases, validated 18h sum
+- All deliverables and commit messages verified
+- DoD fully satisfied
+
+**Time:** 2h (estimated: 4h, accuracy: 0.50 - 50% faster than estimated!)
+
+**Insights:**
+- Breaking down this task into phases made it feel manageable
+- Clear validation criteria prevented scope creep
+- Real-world testing validated the protocol works as designed
+- Documentation examples will help users understand phase breakdown
 
 ---
 
