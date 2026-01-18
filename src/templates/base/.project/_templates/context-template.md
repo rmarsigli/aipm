@@ -158,7 +158,14 @@ Decision: Chose Sanctum over JWT
 - [x] Update this file
 - [ ] Push
 
-**Archive when >200 lines:**
+**Auto-archiving:**
+- Automatic pruning triggers every 10 sessions
+- Keeps last 5 sessions in context.md
+- Archives older sessions to `.project/context-archive/`
+- Run manually: `.project/scripts/archive-context.sh`
+- Dry-run preview: `.project/scripts/archive-context.sh --dry-run`
+
+**Manual archive (if needed):**
 ```bash
 mkdir -p .project/context-archive/
 mv .project/context.md .project/context-archive/$(date +%Y-%m).md
