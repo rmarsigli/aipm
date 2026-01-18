@@ -135,6 +135,45 @@ next_action: "Complete login tests"
 
 Template: `.project/_templates/context.md`
 
+### Automatic Context Pruning
+
+**MANDATORY: Archive old sessions every 10 sessions**
+
+When `session number % 10 == 0`:
+
+1. **Create archive directory** (if needed):
+   ```bash
+   mkdir -p .project/context-archive
+   ```
+
+2. **Archive old sessions**:
+   - Extract sessions 1 through (N-5) from context.md
+   - Save to `.project/context-archive/YYYY-MM-period.md`
+   - Filename format: `2026-01-weeks1-2.md` (based on date range)
+
+3. **Update context.md**:
+   - Keep only last 5 session summaries
+   - Preserve current state, active work, recent decisions
+   - Update session counter
+
+4. **Commit**:
+   ```bash
+   git add .project/context.md .project/context-archive/
+   git commit -m "chore: archive context sessions 1-N"
+   ```
+
+**Archive structure:**
+```
+.project/context-archive/
+├── 2026-01-weeks1-2.md    # Sessions 1-10
+├── 2026-01-weeks3-4.md    # Sessions 11-20
+└── 2026-02-weeks1-2.md    # Sessions 21-30
+```
+
+**Why:** Keeps context.md under 200 lines, reduces token consumption, preserves history.
+
+**Script:** Optional helper at `.project/scripts/archive-context.sh` (see below)
+
 ## File Management
 
 **Complex tasks** (>20 checkboxes OR >500 lines): Use directory
