@@ -41,6 +41,50 @@ related_files: []
 - [ ] Step 2.1
 - [ ] Step 2.2
 
+<!--
+NOTE: For tasks >12h, use Phase Breakdown Protocol (see project-manager.md)
+
+Example for 18h task:
+
+### Phase 1: Setup & Schema (3h)
+- [ ] Define data schema
+- [ ] Create database tables/migrations
+- [ ] Setup dependencies
+- [ ] Basic configuration
+
+**Deliverable:** Database ready, dependencies installed
+**Commit message:** feat(phase1): setup schema and dependencies
+
+### Phase 2: Core Implementation (6h)
+- [ ] Implement main business logic
+- [ ] Create API endpoints
+- [ ] Add data validation
+- [ ] Error handling
+
+**Deliverable:** Core functionality working
+**Commit message:** feat(phase2): implement core functionality
+
+### Phase 3: Testing (5h)
+- [ ] Unit tests for core logic
+- [ ] Integration tests
+- [ ] Edge case coverage
+- [ ] Performance validation
+
+**Deliverable:** 80%+ test coverage
+**Commit message:** test(phase3): comprehensive test suite
+
+### Phase 4: Documentation (4h)
+- [ ] API documentation
+- [ ] README updates
+- [ ] Usage examples
+- [ ] Code comments where needed
+
+**Deliverable:** Complete documentation
+**Commit message:** docs(phase4): add comprehensive documentation
+
+Total: 3+6+5+4 = 18h ✓
+-->
+
 ## Definition of Done
 
 ### Functionality

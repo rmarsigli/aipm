@@ -135,6 +135,83 @@ Blockers:
 **Manual updates:**
 The AI agent should update the Metrics section in `context.md` after each task completion following the protocol in the project-manager guidelines.
 
+### Large Task Breakdown Protocol
+
+Breaking down large tasks (>12h) into smaller, manageable phases reduces stall risk and improves tracking.
+
+**When to Break Down:**
+- Tasks with `estimated_hours > 12`
+- Tasks with >20 checkboxes
+- Complex features with multiple components
+
+**Phase Structure:**
+- 3-5 phases of 2-6 hours each
+- Each phase has clear deliverables
+- Each phase gets its own commit
+- Sum of phases matches total estimate (±1h tolerance)
+
+**Example: 18h Task Breakdown**
+
+Before (risky):
+```yaml
+title: "Implement User Profile System"
+estimated_hours: 18
+```
+
+After (manageable):
+```markdown
+## Implementation
+
+### Phase 1: Setup & Schema (3h)
+- [ ] Define user profile schema (bio, avatar, preferences)
+- [ ] Create database tables with indexes
+- [ ] Write migrations
+- [ ] Setup model relationships
+
+**Deliverable:** Database ready, models configured
+**Commit message:** feat(phase1): setup user profile schema
+
+### Phase 2: Core Implementation (6h)
+- [ ] Implement profile CRUD operations
+- [ ] Add avatar upload with validation
+- [ ] Create profile update API endpoints
+- [ ] Add input validation and error handling
+- [ ] Implement privacy settings
+
+**Deliverable:** Core functionality working
+**Commit message:** feat(phase2): implement profile management
+
+### Phase 3: Testing & Validation (5h)
+- [ ] Unit tests for profile operations
+- [ ] Integration tests for API endpoints
+- [ ] Edge case handling (large avatars, invalid data)
+- [ ] Performance tests (concurrent updates)
+- [ ] Browser testing (responsive, no errors)
+
+**Deliverable:** 80%+ test coverage
+**Commit message:** test(phase3): comprehensive profile tests
+
+### Phase 4: Documentation & Polish (4h)
+- [ ] API documentation for profile endpoints
+- [ ] README updates with usage examples
+- [ ] Code cleanup and optimization
+- [ ] Add inline comments for complex logic
+
+**Deliverable:** Complete documentation
+**Commit message:** docs(phase4): add profile system documentation
+
+Total: 3+6+5+4 = 18h ✓
+```
+
+**Benefits:**
+- ✅ Clear checkpoints prevent midway stalls
+- ✅ Visible progress through phase completion
+- ✅ Atomic commits per phase (easier to review/revert)
+- ✅ Better context preservation if interrupted
+- ✅ Improved estimation accuracy for future tasks
+
+**See Also:** Full breakdown protocol in `.project/CLAUDE.md` (Large Task Auto-Breakdown section)
+
 ---
 
 **Happy Coding!**
