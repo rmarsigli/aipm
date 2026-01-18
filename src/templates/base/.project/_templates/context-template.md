@@ -127,13 +127,38 @@ Decision: Chose Sanctum over JWT
 
 ## Metrics
 
-**Velocity:**
-- Tasks this week: 3
-- Avg time: 4.5h (est: 4h)
+<!-- Auto-update after completing each task, weekly on Fridays, monthly on last Friday -->
+
+**Productivity:**
+- Tasks completed this week: 3
+- Tasks completed this month: 8
+- Estimate accuracy: 1.12 (actual/estimated avg) <!-- Calculate: sum(actual_hours) / sum(estimated_hours) -->
+- Velocity trend: ↗️ Improving <!-- Compare last 4 weeks task counts -->
 
 **Quality:**
-- Bugs: 1
-- Coverage: 67% ↗️
+- Test coverage: 67% ↗️ (target: 80%)
+- Bugs reported this week: 1
+- Bugs reported this month: 3
+- Code quality warnings: 5 (linter/static analysis)
+
+**Time Distribution:**
+- Development: 60%
+- Testing: 20%
+- Documentation: 10%
+- Debugging: 10%
+<!-- Track from task phase checkboxes and actual_hours breakdown -->
+
+**Blockers:**
+- Most common type: Dependencies (3 occurrences)
+- Average resolution time: 2.5 hours
+- Active blockers: 0
+<!-- Parse blocker field from completed tasks -->
+
+**Trends (Last 30 Days):**
+- Tasks completed: 8 (prev: 6) ↗️ +33%
+- Average task size: 4.2h (prev: 5.1h) ↘️
+- Rework rate: 8% (tasks requiring fixes) ↘️
+<!-- Compare current month vs previous month metrics -->
 
 ## Next Action
 
