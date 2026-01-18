@@ -37,7 +37,82 @@
 **End:**
 1. Update `current-task.md`: actual_hours, checkboxes
 2. Update `context.md`: session++, next_action, summary
-3. Commit & push
+3. **Update metrics** (see Metrics Protocol below)
+4. Commit & push
+
+## Metrics Tracking Protocol
+
+**MANDATORY: Update metrics after completing each task**
+
+### When to Update
+
+1. **After completing each task** - Update productivity metrics
+2. **Weekly on Fridays** - Generate weekly report
+3. **Monthly on last Friday** - Generate monthly trend report
+
+### Metrics to Track
+
+Update the Metrics section in `context.md` with:
+
+**Productivity:**
+```markdown
+- Tasks completed this week: X
+- Tasks completed this month: Y
+- Estimate accuracy: Z (actual/estimated avg)
+- Velocity trend: ↗️/→/↘️ (compare last 4 weeks)
+```
+
+**Calculation formulas:**
+- Estimate accuracy = `sum(actual_hours from completed/) / sum(estimated_hours from completed/)`
+- Velocity trend = Compare task counts: last week vs 4-week average
+  - ↗️ Improving: >10% increase
+  - → Stable: ±10%
+  - ↘️ Declining: >10% decrease
+
+**Quality:**
+```markdown
+- Test coverage: X% (from coverage reports)
+- Bugs reported this week/month: Y
+- Code quality warnings: Z (linter output)
+```
+
+**Blockers:**
+```markdown
+- Most common type: X (parse blocker: field from completed tasks)
+- Average resolution time: Y hours
+- Active blockers: Z (from current-task.md)
+```
+
+**Trends (Last 30 Days):**
+```markdown
+- Tasks completed: X (prev: Y) ↗️ +Z%
+- Average task size: Xh (prev: Yh)
+- Rework rate: X% (tasks requiring fixes after completion)
+```
+
+### Automation Helper
+
+Optional: Use `.project/scripts/calculate-metrics.sh` to auto-calculate metrics from completed task files.
+
+```bash
+# Generate metrics report
+.project/scripts/calculate-metrics.sh
+
+# Output formatted for context.md
+.project/scripts/calculate-metrics.sh --format=markdown
+```
+
+### Example Update
+
+After completing TASK-003 (5h estimated, 4.5h actual):
+
+```diff
+  **Productivity:**
+- - Tasks completed this week: 2
++ - Tasks completed this week: 3
+- - Estimate accuracy: 1.15
++ - Estimate accuracy: 1.12
+```
 
 ## Task File Format
 
