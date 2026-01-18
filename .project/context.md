@@ -1,14 +1,14 @@
 ---
-session: 1
-last_updated: 2026-01-18T16:50:00-03:00
+session: 2
+last_updated: 2026-01-18T17:00:00-03:00
 active_branches: [main]
 blockers: []
-next_action: "Pick next task from backlog (recommend TASK-001 or TASK-002)"
+next_action: "Start TASK-001 (Session Metrics) or TASK-002 (Task Breakdown) - recommend TASK-001"
 ---
 
 # Current State
 
-AIPIM successfully completed first dogfooding task (TASK-004: Context Auto-Pruning). Feature implemented, tested, and documented. Ready for next enhancement task.
+AIPIM dogfooding session complete. TASK-004 finished successfully (context auto-pruning feature). Protocol bug discovered and fixed (mv vs cp for backlog tasks). Templates updated in both AIPIM and DelphiChess projects. Ready for next enhancement task.
 
 # Active Work
 
@@ -84,6 +84,30 @@ AIPIM successfully completed first dogfooding task (TASK-004: Context Auto-Pruni
 **Time:** 4 hours total (1.5h setup + 2.5h implementation)
 
 **Next Session:** Pick next task (recommend TASK-001 Session Metrics for visibility)
+
+## Session 1.5 - Protocol Fix (2026-01-18, 30min)
+
+**Bug Discovery:**
+- User caught task duplication issue: TASK-004 existed in both backlog/ and completed/
+- Root cause: Used `cp` instead of `mv` when starting task from backlog
+
+**Fix Applied:**
+- ✅ Removed TASK-004 from backlog (commit: e000dfa)
+- ✅ Updated GEMINI.md/CLAUDE.md in DelphiChess with explicit `mv` workflow
+- ✅ Updated AIPIM template with clarified commands
+- ✅ Added warning: "Task should only exist in one place"
+
+**Commits:**
+- `chore: remove completed TASK-004 from backlog` (AIPIM)
+- `docs: fix task workflow - use mv not cp for backlog tasks` (DelphiChess)
+- `fix(templates): clarify mv vs cp for backlog tasks` (AIPIM template)
+
+**Validation:**
+- Dogfooding revealed real workflow issue
+- Protocol now explicit about `mv` vs `cp`
+- Won't repeat this mistake
+
+**Time:** 30min
 
 ---
 
