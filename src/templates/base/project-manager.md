@@ -87,8 +87,11 @@ Full checklist: `.project/docs/definition-of-done.md`
 ## Common Commands
 
 ```bash
-# Start new task
+# Start new task from template (for new tasks)
 cp .project/_templates/task.md .project/current-task.md
+
+# Start task from backlog (IMPORTANT: use mv not cp)
+mv .project/backlog/TASK-XXX.md .project/current-task.md
 
 # Complete task
 mv .project/current-task.md .project/completed/$(date +%Y-%m-%d)-name.md
@@ -102,6 +105,8 @@ cp .project/_templates/adr.md .project/decisions/$(date +%Y-%m-%d)-name.md
 # Check session budget
 .project/scripts/pre-session.sh
 ```
+
+**⚠️ Critical:** When starting a task from backlog, use `mv` (not `cp`) to remove it from backlog. Task should only exist in one place: backlog → current-task → completed.
 
 ## Context Management
 
