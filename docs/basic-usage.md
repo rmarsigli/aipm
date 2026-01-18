@@ -90,6 +90,51 @@ AIPIM automatically manages your `context.md` file to prevent it from growing to
 - Review archived sessions when context is needed from older work
 - Update session counter in frontmatter after each development session
 
+### Session Metrics Tracking
+
+Track productivity trends and code quality metrics automatically to identify patterns and improve velocity.
+
+**Automatic Metrics (v1.2+):**
+- Tasks completed per week/month
+- Estimate accuracy (actual vs estimated hours)
+- Most common blocker types
+- Velocity trends over time
+- Code quality indicators
+
+**Using the metrics script:**
+```bash
+# View metrics summary
+.project/scripts/calculate-metrics.sh
+
+# Generate markdown for context.md
+.project/scripts/calculate-metrics.sh --format=markdown
+
+# View only current month
+.project/scripts/calculate-metrics.sh --period=month
+```
+
+**Example output:**
+```
+=== AIPIM Metrics Report ===
+
+Productivity:
+  Tasks completed this month: 8
+  Estimate accuracy: 1.12 (actual/estimated avg)
+  Velocity trend: ↗️ Improving
+
+Blockers:
+  Most common type: Dependencies (3 occurrences)
+```
+
+**Best Practices:**
+- Update metrics after completing each task
+- Review weekly trends to identify bottlenecks
+- Use estimate accuracy to improve future estimates
+- Track blockers to address recurring issues
+
+**Manual updates:**
+The AI agent should update the Metrics section in `context.md` after each task completion following the protocol in the project-manager guidelines.
+
 ---
 
 **Happy Coding!**
