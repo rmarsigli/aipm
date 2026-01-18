@@ -3,7 +3,7 @@ session: 2
 last_updated: 2026-01-18T17:00:00-03:00
 active_branches: [main]
 blockers: []
-next_action: "Start TASK-001 (Session Metrics) or TASK-002 (Task Breakdown) - recommend TASK-001"
+next_action: "Continue TASK-001 (Session Metrics) implementation"
 ---
 
 # Current State
@@ -15,10 +15,9 @@ AIPIM dogfooding session complete. TASK-004 finished successfully (context auto-
 **Status:** No active task (TASK-004 completed)
 
 **Available backlog tasks:**
-- TASK-001: Session Metrics (6h) - P2-M
+- TASK-001: Session Metrics (6h) - P2-M ⭐ Recommended next
 - TASK-002: Task Breakdown (4h) - P2-M
 - TASK-003: ADR Automation (5h) - P2-M
-- TASK-004: Context Pruning (3h) - P2-S ⭐ Recommended next
 - TASK-005: Backlog Health (4h) - P3
 
 # Recent Decisions

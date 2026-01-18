@@ -16,7 +16,7 @@ These improvements add significant automation and intelligence to the AI agent w
 
 Small improvements with good ROI:
 
-- **TASK-004**: Context Auto-Pruning (3h) - Automatically archive old context every 10 sessions
+- ~~**TASK-004**: Context Auto-Pruning (3h)~~ ✅ Completed 2026-01-18
 
 ### Nice to Have (P3)
 
@@ -27,10 +27,10 @@ Lower priority enhancements:
 ## Total Estimated Hours
 
 - Medium Priority (P2-M): 15 hours
-- Quick Wins (P2-S): 3 hours
+- ~~Quick Wins (P2-S): 3 hours~~ ✅ Completed
 - Nice to Have (P3): 4 hours
 
-**Total**: 22 hours
+**Total**: 19 hours remaining
 
 ## Priority Legend
 
@@ -95,5 +95,5 @@ When implementing these tasks:
 ---
 
 **Last Updated:** 2026-01-18
-**Total Tasks:** 5
-**Status:** All in backlog
+**Total Tasks:** 5 (4 remaining, 1 completed)
+**Status:** TASK-004 completed, TASK-001 in progress
