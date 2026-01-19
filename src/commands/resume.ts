@@ -228,15 +228,7 @@ async function generateResumeSummary(projectDir: string, cwd: string): Promise<R
 }
 
 function displayResumeSummary(data: ResumeSummary, log: (msg: string) => void): void {
-    log('')
-    log(chalk.blue('═'.repeat(60)))
-    log(chalk.blue.bold('  AIPIM SESSION RESUME'))
-    log(chalk.blue('═'.repeat(60)))
-    log('')
-
-    // Session age
-    log(`${data.sessionAge.indicator} Last Session: ${chalk.bold(data.sessionAge.text)}`)
-    log('')
+    displayHeader(data, log)
 
     // Handle different statuses
     if (data.status === 'fresh') {
@@ -248,10 +240,7 @@ function displayResumeSummary(data: ResumeSummary, log: (msg: string) => void): 
         log(chalk.yellow('[WARN] No active task'))
         log(chalk.gray('  Run `aipim task list` to see available tasks'))
         log('')
-        if (data.lastCommit) {
-            log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
-        }
-        log(chalk.blue('═'.repeat(60)))
+        displayFooter(data, log)
         return
     }
 
@@ -259,56 +248,92 @@ function displayResumeSummary(data: ResumeSummary, log: (msg: string) => void): 
         log(chalk.green('[DONE] Task completed!'))
         log(chalk.gray('  Choose your next task from the backlog'))
         log('')
-        if (data.lastCommit) {
-            log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
-        }
-        log(chalk.blue('═'.repeat(60)))
-
+        displayFooter(data, log)
         return
     }
 
     // Active task
     if (data.task) {
-        log(`${chalk.bold('You were working on:')} ${chalk.cyan(data.task.title)}`)
-        if (data.task.phase) {
-            log(chalk.gray(`   ${data.task.phase} (${data.task.estimatedHours}h estimated)`))
-        }
-        log(
-            chalk.gray(
-                `   Progress: ${data.task.progress.completed}/${data.task.progress.total} checkboxes (${data.task.progress.percentage}%)`
-            )
+        displayTaskDetails(data.task, log)
+        displayCheckpoints(data.task, log)
+        displayContext(data.task, data.nextAction, log)
+    }
+
+    displayFooter(data, log)
+}
+
+/**
+ * Displays the session header and age information.
+ */
+function displayHeader(data: ResumeSummary, log: (msg: string) => void): void {
+    log('')
+    log(chalk.blue('═'.repeat(60)))
+    log(chalk.blue.bold('  AIPIM SESSION RESUME'))
+    log(chalk.blue('═'.repeat(60)))
+    log('')
+
+    log(`${data.sessionAge.indicator} Last Session: ${chalk.bold(data.sessionAge.text)}`)
+    log('')
+}
+
+/**
+ * Displays the details of the active task, including title, phase, and progress.
+ */
+function displayTaskDetails(task: NonNullable<ResumeSummary['task']>, log: (msg: string) => void): void {
+    log(`${chalk.bold('You were working on:')} ${chalk.cyan(task.title)}`)
+    if (task.phase) {
+        log(chalk.gray(`   ${task.phase} (${task.estimatedHours}h estimated)`))
+    }
+    log(
+        chalk.gray(
+            `   Progress: ${task.progress.completed}/${task.progress.total} checkboxes (${task.progress.percentage}%)`
         )
-        log('')
+    )
+    log('')
+}
 
-        // Checkpoints
-        log(chalk.bold('You stopped at:'))
-        if (data.task.lastCompleted.length > 0) {
-            data.task.lastCompleted.forEach((item) => {
-                log(chalk.green(`   [x] ${item}`))
-            })
-        }
-        if (data.task.currentItem) {
-            log(chalk.yellow(`   >> Working on: ${data.task.currentItem}`))
-        }
-        if (data.task.nextItem) {
-            log(chalk.gray(`   -- Next: ${data.task.nextItem}`))
-        }
-        log('')
+/**
+ * Displays the checkpoints (last completed, current, next) for the task.
+ */
+function displayCheckpoints(task: NonNullable<ResumeSummary['task']>, log: (msg: string) => void): void {
+    log(chalk.bold('You stopped at:'))
+    if (task.lastCompleted.length > 0) {
+        task.lastCompleted.forEach((item) => {
+            log(chalk.green(`   [x] ${item}`))
+        })
+    }
+    if (task.currentItem) {
+        log(chalk.yellow(`   >> Working on: ${task.currentItem}`))
+    }
+    if (task.nextItem) {
+        log(chalk.gray(`   -- Next: ${task.nextItem}`))
+    }
+    log('')
+}
 
-        // Context
-        if (data.task.objective) {
-            log(chalk.bold('Quick context:'))
-            log(chalk.gray(`   ${data.task.objective}`))
-            log('')
-        }
-
-        // Suggestion
-        log(chalk.bold('Suggested next action:'))
-        log(chalk.gray(`   ${data.nextAction}`))
+/**
+ * Displays context information and the suggested next action.
+ */
+function displayContext(
+    task: NonNullable<ResumeSummary['task']>,
+    nextAction: string,
+    log: (msg: string) => void
+): void {
+    if (task.objective) {
+        log(chalk.bold('Quick context:'))
+        log(chalk.gray(`   ${task.objective}`))
         log('')
     }
 
-    // Last commit
+    log(chalk.bold('Suggested next action:'))
+    log(chalk.gray(`   ${nextAction}`))
+    log('')
+}
+
+/**
+ * Displays the footer and last commit information.
+ */
+function displayFooter(data: ResumeSummary, log: (msg: string) => void): void {
     if (data.lastCommit) {
         log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         log('')

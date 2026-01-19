@@ -29,18 +29,20 @@ Previous sessions: T021, T019, T015, T013, T012, T011 all COMPLETED.
 - ✅ T023: Parallelize ProjectScanner (56ms → 37ms)
 - ✅ T024: Replace execSync with async spawn
 - ✅ T025: Extract magic strings to constants
+- ✅ T026: Split Long Functions (displayResumeSummary refactor)
 
 **Sprint 3 Progress:**
 - ✅ T023: Parallelize ProjectScanner
 - ✅ T024: Replace execSync with spawn
 - ✅ T025: Extract magic strings
+- ✅ T026: Split Long Functions (displayResumeSummary)
 
 **All Sprints:**
 - Sprint 1: ✅ COMPLETE (T016-T019)
 - Sprint 2: ✅ COMPLETE (T020-T022)
-- Sprint 3: 🟡 IN PROGRESS (T023-T025 done, T026-T027 pending)
+- Sprint 3: 🟡 IN PROGRESS (T023-T026 done, T027 pending)
 
-**Next action:** Continue Sprint 3 (T026: Split long functions, T027: Add JSDoc) or start Sprint 4
+**Next action:** Continue Sprint 3 (T027: Add JSDoc to core modules)
 
 
 **Other backlog tasks:**
