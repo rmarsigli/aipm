@@ -5,7 +5,6 @@ import chalk from 'chalk'
 import { InstallOptions, UpdateOptions } from '@/types/index.js'
 import { install } from './commands/install.js'
 import { update } from './commands/update.js'
-import { diff } from './commands/diff.js'
 import { validate } from './commands/validate.js'
 import { start } from './commands/start.js'
 import { resume } from './commands/resume.js'
@@ -80,19 +79,6 @@ program
 
         try {
             await update(options as UpdateOptions)
-        } catch (error: unknown) {
-            const message = error instanceof Error ? error.message : String(error)
-            console.error(chalk.red(`\nError: ${message}\n`))
-            process.exit(1)
-        }
-    })
-
-program
-    .command('diff')
-    .description('Show what would change with update')
-    .action(async () => {
-        try {
-            await diff()
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
             console.error(chalk.red(`\nError: ${message}\n`))
