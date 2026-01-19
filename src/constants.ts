@@ -16,6 +16,7 @@ export const PROMPTS = {
 
 export const PROJECT_STRUCTURE = [
     'backlog',
+    'backlog/archived',
     'completed',
     'decisions',
     'docs',

@@ -130,7 +130,11 @@ function getPromptFilename(ai: string): string {
 }
 
 async function makeScriptsExecutable(dryRun?: boolean): Promise<void> {
-    const scripts = ['.project/scripts/pre-session.sh', '.project/scripts/validate-dod.sh']
+    const scripts = [
+        '.project/scripts/pre-session.sh',
+        '.project/scripts/validate-dod.sh',
+        '.project/scripts/backlog-health.sh'
+    ]
 
     await Promise.all(
         scripts.map(async (script) => {

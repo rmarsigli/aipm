@@ -262,6 +262,26 @@ After completing TASK-003 (5h estimated, 4.5h actual):
 + - Estimate accuracy: 1.12
 ```
 
+## Backlog Health Check Protocol
+
+**MANDATORY: Weekly review on Fridays**
+
+### Protocol
+1.  **Analyze Backlog:**
+    -   Identify "Stale" tasks (>4 weeks without update)
+    -   Identify "Blocked" tasks (>2 weeks blocked)
+2.  **Generate Report:**
+    -   Run `.project/scripts/backlog-health.sh`
+3.  **Take Action:**
+    -   **Archive:** Move widely irrelevant/stale tasks to `.project/backlog/archived/`
+    -   **Unblock:** Schedule action items for blocked tasks
+    -   **Deprioritize:** Downgrade P2s to P3s if they are stalling
+
+### Health Metrics
+-   **Stale Rate:** % of backlog items untouched for >30 days (Target: <20%)
+-   **Blocker Age:** Max days a task has been blocked (Target: <14 days)
+
+
 ## Task File Format
 
 ```yaml
