@@ -4,8 +4,8 @@ created: 2026-01-18T19:05:00-03:00
 last_updated: 2026-01-18T19:05:00-03:00
 priority: P2-M
 estimated_hours: 8
-actual_hours: 0
-status: backlog
+actual_hours: 1
+status: done
 blockers: []
 tags: [automation, quality, testing]
 related_files: [src/templates/base/.project/scripts/, docs/basic-usage.md]

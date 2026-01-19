@@ -39,8 +39,9 @@
 **End:**
 1. Update `current-task.md`: actual_hours, checkboxes
 2. Update `context.md`: session++, next_action, summary
-3. **Update metrics** (see Metrics Protocol below)
-4. Commit & push
+3. **Run Quality Check (Optional):** `.project/scripts/analyze-quality.sh --manual`
+4. **Update metrics** (see Metrics Protocol below)
+5. Commit & push
 
 ## Large Task Auto-Breakdown Protocol
 

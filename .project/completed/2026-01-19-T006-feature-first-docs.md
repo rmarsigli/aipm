@@ -4,8 +4,8 @@ created: 2026-01-18T19:00:00-03:00
 last_updated: 2026-01-18T19:00:00-03:00
 priority: P2-M
 estimated_hours: 3
-actual_hours: 0
-status: backlog
+actual_hours: 1
+status: done
 blockers: []
 tags: [documentation, pattern, best-practices]
 related_files: [docs/patterns/, src/templates/base/]
@@ -126,7 +126,7 @@ src/                             # HOW: Implementation details
 
 ## Completion
 
-- [ ] All DoD checked
-- [ ] Time logged
-- [ ] Context updated
-- [ ] ADR created for pattern
+- [x] All DoD checked
+- [x] Time logged
+- [x] Context updated
+- [x] ADR created for pattern
