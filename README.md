@@ -88,26 +88,26 @@ aipim task init feature "Impl User Auth"
 
 ## Features
 
-### 🔒 Safe Update Strategy
+### Safe Update Strategy
 Updates are now reliable and safe. `aipim update` automatically:
 - **Scans** your project for changes.
 - **Backs up** the `.project` directory before touching anything.
 - **Preserves** your customizations (modified files are skipped).
 - **Updates** only pristine files to the latest version.
 
-### 📐 Framework Guidelines
+### Framework Guidelines
 Stop pasting context manually. `aipim install` now:
 - **Detects** your technology stack (e.g. Next.js, Astro, Vue, Node.js).
 - **Injects** optimized official guidelines into your AI rules (`CLAUDE.md`, etc).
 - **Ensures** AI follows project-specific coding standards automatically.
 
-### 🩺 Doctor (`validate`)
+### Doctor (`validate`)
 Ensure your project is healthy with `aipim validate` (or `aipim check`). It checks:
 - Directory structure integrity.
 - Script permissions (smart cross-platform checks).
 - File signature verification (detects legacy or tampered files).
 
-### 📋 Task Lifecycle & Automation
+### Task Lifecycle & Automation
 AIPIM enforces a clear lifecycle for your tasks, preventing chaos.
 
 `[ Backlog ] --> [ Current Task ] --> [ Completed / Archive ]`
@@ -116,6 +116,11 @@ Use `aipim task init <type> <name>` to:
 - **Auto-number** tasks (`TASK-001`, `TASK-002`) to maintain order.
 - **Generate** a structured file with sections for Context, Objective, and Verification.
 - **Register** the task in `backlog.md` automatically.
+
+### Advanced Workflows
+
+- **Pain-Driven Development**: A protocol to capture friction during testing (`current-task.md`) and automatically convert it into prioritized backlog items using `pain-to-tasks.sh`.
+- **Feature-First Documentation**: A pattern of documenting business logic in `.project/docs/features/` before implementation, significantly reducing AI context consumption.
 
 *You focus on the code; AIPIM keeps the history organized.*
 
@@ -139,6 +144,9 @@ The system relies on a simple file structure in your project root:
 | :--- | :--- |
 | `.project/scripts/pre-session.sh` | Estimates token usage for the current session. |
 | `.project/scripts/validate-dod.sh` | validating Definition of Done (tests, lint, etc). |
+| `.project/scripts/analyze-quality.sh` | Generates a comprehensive code quality report using AI. |
+| `.project/scripts/task-velocity.sh` | Calculates team velocity and completion estimates. |
+| `.project/scripts/pain-to-tasks.sh` | Converts "pain points" documented during testing into backlog tasks. |
 
 ## Development Scripts
 
@@ -151,6 +159,7 @@ These scripts are available in `package.json` for development usage:
 | `pnpm test:e2e` | Runs the comprehensive CLI test suite (Smoke Tests). |
 | `pnpm lint` | Validates code style and checks logic errors. |
 | `pnpm type-check` | Validates TypeScript types. |
+| `pnpm test:coverage` | Runs unit tests and generates a coverage report (min 80%). |
 
 ## Contributing
 
