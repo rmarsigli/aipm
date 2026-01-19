@@ -1,4 +1,5 @@
 import { logger } from '@/utils/logger.js'
+import { output } from '@/utils/output.js'
 import { join, dirname } from 'path'
 import { existsSync, readFileSync, readdirSync, writeFileSync } from 'fs'
 import { fileURLToPath } from 'url'
@@ -14,11 +15,10 @@ interface TemplateOptions {
     list?: boolean
     print?: boolean
     edit?: boolean
-    logger?: { log: (msg: string) => void }
 }
 
 export async function template(name: string | undefined, options: TemplateOptions): Promise<void> {
-    const log = options.logger?.log || console.log
+    const log = output.print.bind(output)
     const cwd = process.cwd()
     const projectDir = join(cwd, '.project')
 

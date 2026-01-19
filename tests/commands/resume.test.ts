@@ -28,6 +28,12 @@ jest.unstable_mockModule('../../src/utils/logger.js', () => ({
     }
 }))
 
+jest.unstable_mockModule('../../src/utils/output.js', () => ({
+    output: {
+        print: jest.fn(),
+    }
+}))
+
 jest.unstable_mockModule('../../src/utils/context.js', () => ({
     parseContext: jest.fn(),
     parseTask: jest.fn(),
@@ -58,6 +64,7 @@ const fsPromises = await import('fs/promises')
 const gitUtils = await import('../../src/utils/git.js')
 const inquirer = await import('@inquirer/prompts')
 const loggerModule = await import('../../src/utils/logger.js')
+const outputModule = await import('../../src/utils/output.js')
 const contextUtils = await import('../../src/utils/context.js')
 const startCommand = await import('../../src/commands/start.js')
 // Load chalk to ensure mock is applied
@@ -68,7 +75,6 @@ describe('resume command', () => {
     const mockExit = jest.spyOn(globalThis.process, 'exit').mockImplementation(((code?: number) => {
         throw new Error(`process.exit: ${code}`)
     }) as any)
-    const mockLog = jest.fn()
 
     beforeEach(() => {
         jest.clearAllMocks()
@@ -106,7 +112,7 @@ describe('resume command', () => {
 
     test('exits if .project directory is missing', async () => {
         ;(fs.existsSync as jest.Mock).mockReturnValue(false)
-        await expect(resume({ logger: { log: mockLog } })).rejects.toThrow('process.exit: 1')
+        await expect(resume({})).rejects.toThrow('process.exit: 1')
         expect(loggerModule.logger.error).toHaveBeenCalledWith(expect.stringContaining('No .project directory found'))
         expect(mockExit).toHaveBeenCalledWith(1)
     })
@@ -125,9 +131,9 @@ describe('resume command', () => {
         ;(fs.readFileSync as jest.Mock).mockReturnValue(snapshotMock)
         ;(inquirer.confirm as jest.Mock).mockResolvedValue(true as never) // Confirm restore
 
-        await resume({ logger: { log: mockLog } })
+        await resume({})
 
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Interruption Detected')
         expect(output).toContain('Interrupted Task')
         expect(startCommand.start).toHaveBeenCalled()
@@ -140,16 +146,16 @@ describe('resume command', () => {
              frontmatter: { last_updated: new Date().toISOString() }
         })
 
-        await resume({ logger: { log: mockLog }, auto: true })
+        await resume({ auto: true })
 
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('[FRESH]')
     })
 
     test('shows active task details', async () => {
-        await resume({ logger: { log: mockLog }, auto: true })
+        await resume({ auto: true })
 
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Test Task')
         expect(output).toContain('Progress: 1/2 checkboxes (50%)')
         expect(output).toContain('Phase 1')
@@ -170,30 +176,30 @@ describe('resume command', () => {
              return true
         }) as any)
 
-        await resume({ logger: { log: mockLog }, auto: true })
+        await resume({ auto: true })
 
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('No active task')
         expect(output).toContain('Run `aipim task list`')
     })
 
     test('skips confirmation prompt in auto mode', async () => {
-        await resume({ logger: { log: mockLog }, auto: true })
+        await resume({ auto: true })
         expect(inquirer.confirm).not.toHaveBeenCalled()
         expect(startCommand.start).toHaveBeenCalled()
     })
 
     test('asks for confirmation in interactive mode', async () => {
-        await resume({ logger: { log: mockLog }, auto: false })
+        await resume({ auto: false })
         expect(inquirer.confirm).toHaveBeenCalledWith(expect.objectContaining({ message: 'Ready to continue?' }))
         expect(startCommand.start).toHaveBeenCalled()
     })
 
     test('handles user rejection in interactive mode', async () => {
         ;(inquirer.confirm as jest.Mock).mockResolvedValue(false as never)
-        await resume({ logger: { log: mockLog }, auto: false })
+        await resume({ auto: false })
         expect(startCommand.start).not.toHaveBeenCalled()
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Run `aipim start` when ready')
     })
 })

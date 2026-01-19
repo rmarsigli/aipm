@@ -1,4 +1,5 @@
 import { logger } from '@/utils/logger.js'
+import { output } from '@/utils/output.js'
 import { existsSync, readFileSync } from 'fs'
 import { unlink } from 'fs/promises'
 import { join } from 'path'
@@ -12,11 +13,10 @@ import { parseContext, parseTask, calculateProgress, extractCheckpoints, extract
 export interface ResumeOptions {
     auto?: boolean
     verbose?: boolean
-    logger?: { log: (msg: string) => void }
 }
 
 export async function resume(options: ResumeOptions = {}): Promise<void> {
-    const log = options.logger?.log || console.log
+    const log = output.print.bind(output)
     const cwd = process.cwd()
     const projectDir = join(cwd, '.project')
 
@@ -90,7 +90,7 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
                 await unlink(snapshotPath)
 
                 log(chalk.green('\n✅ Context restored. Resuming work...'))
-                await start({ print: false, logger: options.logger })
+                await start({ print: false })
                 return
             } else {
                 log(chalk.gray('Discarding snapshot...'))
@@ -116,7 +116,7 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
         if (answer) {
             log('')
 
-            await start({ print: false, logger: options.logger })
+            await start({ print: false })
         } else {
             log('')
             log(chalk.gray('Run `aipim start` when ready to continue.'))
@@ -124,7 +124,7 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
         }
     } else {
         // Auto mode: go straight to start
-        await start({ print: false, logger: options.logger })
+        await start({ print: false })
     }
 }
 

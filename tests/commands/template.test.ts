@@ -22,6 +22,12 @@ jest.unstable_mockModule('../../src/utils/logger.js', () => ({
     }
 }))
 
+jest.unstable_mockModule('../../src/utils/output.js', () => ({
+    output: {
+        print: jest.fn(),
+    }
+}))
+
 jest.unstable_mockModule('../../src/utils/template-engine.js', () => ({
     getTemplateVariables: jest.fn(),
     renderTemplate: jest.fn(),
@@ -42,6 +48,7 @@ jest.unstable_mockModule('chalk', () => ({
 // Import dependencies AFTER mocking
 const fs = await import('fs')
 const loggerModule = await import('../../src/utils/logger.js')
+const outputModule = await import('../../src/utils/output.js')
 const templateEngine = await import('../../src/utils/template-engine.js')
 const clipboard = await import('../../src/utils/clipboard.js')
 await import('chalk')
@@ -49,7 +56,6 @@ const { template } = await import('../../src/commands/template.js')
 
 describe('template command', () => {
     let originalExit: any
-    const mockLog = jest.fn()
 
     beforeAll(() => {
         originalExit = process.exit
@@ -76,26 +82,26 @@ describe('template command', () => {
         ;(templateEngine.renderTemplate as jest.Mock).mockReturnValue('Rendered Content')
         ;(clipboard.copyToClipboard as jest.Mock).mockResolvedValue(true as any)
     })
-    
+
     test('lists templates implicitly when no name is provided', async () => {
-        await template(undefined, { logger: { log: mockLog } })
-        
-        const output = mockLog.mock.calls.flat().join('\n')
+        await template(undefined, {})
+
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Core Templates:')
         expect(output).toContain('default')
         expect(output).toContain('custom')
     })
 
     test('lists templates explicitly with --list', async () => {
-        await template(undefined, { list: true, logger: { log: mockLog } })
-        
-        const output = mockLog.mock.calls.flat().join('\n')
+        await template(undefined, { list: true })
+
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Core Templates:')
         expect(output).toContain('default')
     })
 
     test('renders and copies a template to clipboard', async () => {
-        await template('default', { logger: { log: mockLog } })
+        await template('default', {})
         
         expect(templateEngine.renderTemplate).toHaveBeenCalled()
         expect(clipboard.copyToClipboard).toHaveBeenCalledWith('Rendered Content')
@@ -103,9 +109,9 @@ describe('template command', () => {
     })
 
     test('renders and prints a template if --print is used', async () => {
-        await template('default', { print: true, logger: { log: mockLog } })
-        
-        const output = mockLog.mock.calls.flat().join('\n')
+        await template('default', { print: true })
+
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Rendered Content')
         expect(clipboard.copyToClipboard).not.toHaveBeenCalled()
     })
@@ -117,7 +123,7 @@ describe('template command', () => {
              return true 
         }) as any)
 
-        await expect(template('missing', { logger: { log: mockLog } }))
+        await expect(template('missing', {}))
             .rejects.toThrow('process.exit: 1')
         
         expect(loggerModule.logger.error).toHaveBeenCalledWith(expect.stringContaining('not found'))

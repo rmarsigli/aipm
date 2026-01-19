@@ -1,4 +1,5 @@
 import { logger } from '@/utils/logger.js'
+import { output } from '@/utils/output.js'
 import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import chalk from 'chalk'
@@ -19,12 +20,11 @@ export interface StartOptions {
     file?: string
     full?: boolean
     verbose?: boolean
-    logger?: { log: (msg: string) => void }
     copy?: boolean
 }
 
 export async function start(options: StartOptions = {}): Promise<void> {
-    const log = options.logger?.log || console.log
+    const log = output.print.bind(output)
     const cwd = process.cwd()
     const projectDir = join(cwd, '.project')
 

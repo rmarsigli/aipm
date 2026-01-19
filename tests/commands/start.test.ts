@@ -15,6 +15,12 @@ jest.unstable_mockModule('../../src/utils/logger.js', () => ({
     }
 }))
 
+jest.unstable_mockModule('../../src/utils/output.js', () => ({
+    output: {
+        print: jest.fn(),
+    }
+}))
+
 jest.unstable_mockModule('../../src/utils/clipboard.js', () => ({
     copyToClipboard: jest.fn(),
 }))
@@ -45,6 +51,7 @@ jest.unstable_mockModule('chalk', () => ({
 // Import dependencies AFTER mocking
 const fs = await import('fs')
 const { logger } = await import('../../src/utils/logger.js')
+const outputModule = await import('../../src/utils/output.js')
 const { copyToClipboard } = await import('../../src/utils/clipboard.js')
 const contextUtils = await import('../../src/utils/context.js')
 const fsExtra = await import('fs-extra')
@@ -56,7 +63,6 @@ describe('start command', () => {
     const mockExit = jest.spyOn(globalThis.process, 'exit').mockImplementation(((code?: number) => {
         throw new Error(`process.exit: ${code}`)
     }) as any)
-    const mockLog = jest.fn()
 
     beforeEach(() => {
         jest.clearAllMocks()
@@ -93,9 +99,9 @@ describe('start command', () => {
     })
 
     test('generates prompt with correct project info', async () => {
-        await start({ print: true, logger: { log: mockLog } })
+        await start({ print: true })
         
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Project: Test Project')
         expect(output).toContain('**Session:** 1')
         expect(output).toContain('**Branch:** main')
@@ -109,8 +115,8 @@ describe('start command', () => {
             return true
         })
 
-        await start({ print: true, logger: { log: mockLog } })
-        const output = mockLog.mock.calls.flat().join('\n')
+        await start({ print: true })
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(logger.warn).toHaveBeenCalledWith('No context.md found')
         expect(output).toContain('No context.md found')
     })
@@ -123,8 +129,8 @@ describe('start command', () => {
             return true
         })
 
-        await start({ print: true, logger: { log: mockLog } })
-        const output = mockLog.mock.calls.flat().join('\n')
+        await start({ print: true })
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('**None** - No current task')
     })
 
@@ -136,8 +142,8 @@ describe('start command', () => {
             { file: 'ADR-001.md', title: 'Use Jest' }
         ])
 
-        await start({ print: true, logger: { log: mockLog } })
-        const output = mockLog.mock.calls.flat().join('\n')
+        await start({ print: true })
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('abc')
         expect(output).toContain('feat: test')
         expect(output).toContain('ADR-001.md')
@@ -146,24 +152,24 @@ describe('start command', () => {
 
     test('saves to file when --file option is used', async () => {
         const filePath = 'prompt.md'
-        await start({ file: filePath, logger: { log: mockLog } })
+        await start({ file: filePath })
         expect(fsExtra.writeFile).toHaveBeenCalledWith(expect.stringContaining(filePath), expect.any(String))
         expect(logger.success).toHaveBeenCalledWith(expect.stringContaining(filePath))
     })
 
     test('copies to clipboard by default', async () => {
         ;(copyToClipboard as jest.Mock).mockResolvedValue(true)
-        await start({ logger: { log: mockLog } })
+        await start({})
         expect(copyToClipboard).toHaveBeenCalled()
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('Session prompt copied to clipboard')
     })
 
     test('falls back to print if clipboard copy fails', async () => {
         ;(copyToClipboard as jest.Mock).mockResolvedValue(false)
-        await start({ logger: { log: mockLog } })
+        await start({})
         expect(logger.warn).toHaveBeenCalledWith(expect.stringContaining('Could not copy'))
-        const output = mockLog.mock.calls.flat().join('\n')
+        const output = (outputModule.output.print as jest.Mock).mock.calls.flat().join('\n')
         expect(output).toContain('AIPIM SESSION PROMPT')
     })
 })
