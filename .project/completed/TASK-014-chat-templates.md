@@ -4,8 +4,8 @@ created: 2026-01-18T20:15:00-03:00
 last_updated: 2026-01-18T20:15:00-03:00
 priority: P2-M  # High impact, complements TASK-009
 estimated_hours: 3
-actual_hours: 0
-status: backlog
+actual_hours: 3
+status: done
 blockers: []
 tags: [cli, ux, chat-integration, templates]
 related_files: [src/commands/, src/prompts/]
@@ -18,11 +18,11 @@ related_files: [src/commands/, src/prompts/]
 Create `aipim template <name>` command that generates ready-to-paste prompts for common dev situations (stuck, review, summary, etc.). Eliminates "how do I ask this?" friction.
 
 **Success:**
-- [ ] `aipim template stuck` generates debugging prompt
-- [ ] `aipim template review` generates code review prompt
-- [ ] `aipim template summary` generates session summary prompt
-- [ ] Auto-copies to clipboard
-- [ ] Extensible (users can add custom templates)
+- [x] `aipim template stuck` generates debugging prompt
+- [x] `aipim template review` generates code review prompt
+- [x] `aipim template summary` generates session summary prompt
+- [x] Auto-copies to clipboard
+- [x] Extensible (users can add custom templates)
 
 ## Context
 
@@ -389,7 +389,7 @@ $ aipim template stuck --print
 
 ## Completion
 
-- [ ] All DoD checked
-- [ ] Time logged
-- [ ] Context updated
-- [ ] Documentation complete
+- [x] All DoD checked
+- [x] Time logged
+- [x] Context updated
+- [x] Documentation complete
