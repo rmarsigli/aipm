@@ -8,6 +8,7 @@ import { update } from './commands/update.js'
 import { diff } from './commands/diff.js'
 import { validate } from './commands/validate.js'
 import { start } from './commands/start.js'
+import { resume } from './commands/resume.js'
 import { version } from './version.js'
 import { logger } from '@/utils/logger.js'
 
@@ -121,6 +122,20 @@ program
     .action(async (options: unknown) => {
         try {
             await start(options as { print?: boolean; file?: string; full?: boolean })
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\nError: ${message}\n`))
+            process.exit(1)
+        }
+    })
+
+program
+    .command('resume')
+    .description('Show last session summary and resume work')
+    .option('--auto', 'Skip prompt and go straight to aipim start')
+    .action(async (options: unknown) => {
+        try {
+            await resume(options as { auto?: boolean })
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
             console.error(chalk.red(`\nError: ${message}\n`))

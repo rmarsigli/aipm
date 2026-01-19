@@ -12,7 +12,32 @@ AIPIM helps you work with AI assistants (Claude, Gemini, ChatGPT) by automatical
 cd /path/to/your/project
 ```
 
-### Step 2: Start AIPIM Session
+### Step 2: Resume Your Last Session (Optional but Recommended)
+
+```bash
+aipim resume
+```
+
+**What you'll see:**
+- When you last worked (hours/days ago)
+- What task you were on
+- Progress percentage
+- Last 3 things you completed
+- What you were working on when you stopped
+- Quick reminder of what the task is about
+- Suggested next action
+
+**Then choose:**
+- Press `Y` to automatically run `aipim start` and continue
+- Press `n` to just see the summary
+
+**Skip if:**
+- You just finished working (<1 hour ago)
+- You remember exactly what you were doing
+
+### Step 3: Start AIPIM Session
+
+If you didn't run `aipim resume`, or if you pressed `n`:
 
 ```bash
 aipim start
@@ -26,14 +51,14 @@ aipim start
 - Generates a complete prompt
 - **Copies it to your clipboard automatically**
 
-### Step 3: Open Chat
+### Step 4: Open Chat
 
 Open your preferred AI chat in a browser:
 - **Claude:** https://claude.ai/new
 - **Gemini:** https://gemini.google.com
 - **ChatGPT:** https://chat.openai.com
 
-### Step 4: Paste
+### Step 5: Paste
 
 Press `Ctrl+V` (or `Cmd+V` on Mac) in the chat.
 
@@ -44,14 +69,14 @@ The AI will receive:
 - ✅ Recent decisions you've made
 - ✅ What to do next
 
-### Step 5: Read AI Response
+### Step 6: Read AI Response
 
 The AI will:
 - ✅ Confirm it understands your project
 - 🎯 Suggest the next immediate step
 - 📋 Help you continue your task
 
-### Step 6: Start Coding
+### Step 7: Start Coding
 
 Follow the AI's suggestion. As you work:
 - Update checkboxes in `.project/current-task.md`
@@ -88,6 +113,14 @@ git push
 
 ## Alternative Modes
 
+### Resume in Auto Mode
+
+Skip the confirmation prompt and go straight to `aipim start`:
+
+```bash
+aipim resume --auto
+```
+
 ### Print to Terminal (no clipboard)
 
 ```bash
@@ -118,7 +151,7 @@ Includes:
 
 ### ❌ "I forgot what I was doing"
 
-**Solution:** Run `aipim start` - it tells you exactly where you left off.
+**Solution:** Run `aipim resume` - shows exactly where you left off with progress percentage and next steps.
 
 ### ❌ "I have 5 tasks in progress"
 
@@ -310,7 +343,18 @@ The generated prompt may contain:
 - **Troubleshooting:** `.project/docs/troubleshooting.md`
 - **Report issues:** https://github.com/rmarsigli/aipim/issues
 
-## Summary: The 3-Command Workflow
+## Summary: The 2-Command Workflow
+
+**Resume session:**
+```bash
+aipim resume
+```
+
+**That's it!** The command shows you where you left off and automatically runs `aipim start` for you.
+
+### Alternative: Classic 3-Step
+
+If you skip `resume`:
 
 **Start session:**
 ```bash
@@ -326,4 +370,4 @@ Ctrl+V (or Cmd+V)
 
 ---
 
-**Remember:** AIPIM exists so you don't have to remember. Use `aipim start` every time, even if you think you remember. The AI needs context, not your assumptions.
+**Remember:** AIPIM exists so you don't have to remember. Use `aipim resume` every time you return to work. It saves 5-15 minutes of "what was I doing?" confusion.
