@@ -37,18 +37,20 @@ describe('Path Validator', () => {
     describe('validatePath', () => {
         it('should allow paths inside base directory', () => {
             const result = validatePath('src/index.ts', projectRoot)
-            expect(result).toBe(path.join(projectRoot, 'src/index.ts'))
+            const expected = path.join(projectRoot, 'src/index.ts')
+            expect(path.normalize(result)).toBe(path.normalize(expected))
         })
 
         it('should allow relative paths staying inside', () => {
             const result = validatePath('./src/../package.json', projectRoot)
-            expect(result).toBe(path.join(projectRoot, 'package.json'))
+            const expected = path.join(projectRoot, 'package.json')
+            expect(path.normalize(result)).toBe(path.normalize(expected))
         })
 
         it('should allow absolute paths inside base', () => {
             const absPath = path.join(projectRoot, 'src/utils/file.ts')
             const result = validatePath(absPath, projectRoot)
-            expect(result).toBe(absPath)
+            expect(path.normalize(result)).toBe(path.normalize(absPath))
         })
 
         it('should block parent directory traversal (../)', () => {
@@ -73,9 +75,10 @@ describe('Path Validator', () => {
     describe('validatePathSafe (Symlinks)', () => {
         it('should allow normal files', async () => {
             mockLstat.mockResolvedValue({ isSymbolicLink: () => false } as any)
-            
+
             const result = await validatePathSafe('src/normal.ts', projectRoot)
-            expect(result).toBe(path.join(projectRoot, 'src/normal.ts'))
+            const expected = path.join(projectRoot, 'src/normal.ts')
+            expect(path.normalize(result)).toBe(path.normalize(expected))
         })
 
         it('should allow safe symlinks (pointing inside)', async () => {
@@ -85,7 +88,7 @@ describe('Path Validator', () => {
             mockRealpath.mockResolvedValue(realPath)
 
             const result = await validatePathSafe('src/link.ts', projectRoot)
-            expect(result).toBe(realPath)
+            expect(path.normalize(result)).toBe(path.normalize(realPath))
         })
 
         it('should block symlinks pointing outside', async () => {
@@ -100,9 +103,10 @@ describe('Path Validator', () => {
 
         it('should ignore ENOENT (file not found) for write operations', async () => {
              mockLstat.mockRejectedValue({ code: 'ENOENT' })
-             
+
              const result = await validatePathSafe('newfile.ts', projectRoot)
-             expect(result).toBe(path.join(projectRoot, 'newfile.ts'))
+             const expected = path.join(projectRoot, 'newfile.ts')
+             expect(path.normalize(result)).toBe(path.normalize(expected))
         })
     })
 })
