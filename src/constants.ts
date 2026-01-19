@@ -31,7 +31,6 @@ export const PROJECT_STRUCTURE = [
 
 export const AI_TOOLS = {
     CLAUDE_CODE: 'claude-code',
-    CLAUDE_AI: 'claude-ai',
     GEMINI: 'gemini',
     CHATGPT: 'chatgpt'
 } as const

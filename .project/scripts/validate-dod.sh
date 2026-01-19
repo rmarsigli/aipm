@@ -46,7 +46,7 @@ fi
 # Check for console.log in JavaScript
 if [ -d "resources/js" ] || [ -d "src" ]; then
     echo -n "  Checking for console.log... "
-    CONSOLE_COUNT=$(find . -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | xargs grep -l "console\\.log\\|console\\.debug" 2>/dev/null | grep -v node_modules | wc -l || echo 0)
+    CONSOLE_COUNT=$(find . -not -path '*/.*' -not -path '*/.project/*' -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" | xargs grep -l "console\\.log\\|console\\.debug" 2>/dev/null | grep -v node_modules | wc -l || echo 0)
     if [ "$CONSOLE_COUNT" -gt 0 ]; then
         echo -e "${YELLOW}${WARNING} Found console.log in ${CONSOLE_COUNT} files${NC}"
         WARNINGS=$((WARNINGS + 1))
@@ -58,7 +58,7 @@ fi
 # Check for print() in Python (excluding scripts/tests is hard without specific patterns, checking generic usage)
 if [ -f "requirements.txt" ] || [ -f "pyproject.toml" ]; then
     echo -n "  Checking for Python print statements... "
-    PRINT_COUNT=$(grep -r "print(" . --include="*.py" --exclude-dir=venv --exclude-dir=.venv --exclude-dir=tests 2>/dev/null | grep -v "#" | wc -l || echo 0)
+    PRINT_COUNT=$(grep -r "print(" . --include="*.py" --exclude-dir=venv --exclude-dir=.venv --exclude-dir=tests --exclude-dir=.project 2>/dev/null | grep -v "#" | wc -l || echo 0)
     if [ "$PRINT_COUNT" -gt 0 ]; then
         echo -e "${YELLOW}${WARNING} Found print() in ${PRINT_COUNT} lines (Python)${NC}"
         WARNINGS=$((WARNINGS + 1))
@@ -70,7 +70,7 @@ fi
 # Check for fmt.Println/Printf in Go
 if [ -f "go.mod" ]; then
     echo -n "  Checking for Go fmt.Print statements... "
-    GO_PRINT_COUNT=$(grep -r "fmt\.Print" . --include="*.go" --exclude-dir=vendor 2>/dev/null | grep -v "//" | wc -l || echo 0)
+    GO_PRINT_COUNT=$(grep -r "fmt\.Print" . --include="*.go" --exclude-dir=vendor --exclude-dir=.project 2>/dev/null | grep -v "//" | wc -l || echo 0)
     if [ "$GO_PRINT_COUNT" -gt 0 ]; then
         echo -e "${YELLOW}${WARNING} Found fmt.Print in ${GO_PRINT_COUNT} lines (Go)${NC}"
         WARNINGS=$((WARNINGS + 1))
@@ -81,7 +81,7 @@ fi
 
 # Check for TODO/FIXME comments
 echo -n "  Checking for TODO/FIXME... "
-TODO_COUNT=$(grep -r "TODO\\|FIXME" app/ resources/ src/ --exclude-dir=vendor --exclude-dir=node_modules 2>/dev/null | wc -l || echo 0)
+TODO_COUNT=$(grep -r "TODO\\|FIXME" app/ resources/ src/ --exclude-dir=vendor --exclude-dir=node_modules --exclude-dir=.project 2>/dev/null | wc -l || echo 0)
 if [ "$TODO_COUNT" -gt 5 ]; then
     echo -e "${YELLOW}${WARNING} Found ${TODO_COUNT} TODO/FIXME comments${NC}"
     WARNINGS=$((WARNINGS + 1))
@@ -272,7 +272,7 @@ fi
 
 # Check for large files
 echo -n "  Checking for large files... "
-LARGE_FILES=$(find . -name "*.php" -o -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" 2>/dev/null | xargs wc -l 2>/dev/null | awk '$1 > 500 {print}' | grep -v node_modules | grep -v vendor | wc -l || echo 0)
+LARGE_FILES=$(find . -not -path '*/.*' -not -path '*/.project/*' -name "*.php" -o -name "*.js" -o -name "*.jsx" -o -name "*.ts" -o -name "*.tsx" 2>/dev/null | xargs wc -l 2>/dev/null | awk '$1 > 500 {print}' | grep -v node_modules | grep -v vendor | wc -l || echo 0)
 if [ "$LARGE_FILES" -gt 0 ]; then
     echo -e "${YELLOW}${WARNING} Found ${LARGE_FILES} files >500 lines${NC}"
     echo "    Consider breaking down large files"
