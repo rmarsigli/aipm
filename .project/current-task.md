@@ -5,7 +5,7 @@ last_updated: 2026-01-19T02:00:00-03:00
 priority: P1-M
 estimated_hours: 6
 actual_hours: 0
-status: backlog
+status: in-progress
 blockers: [T020-extract-parsing-utilities]
 tags: [testing, quality, commands]
 related_files: [tests/commands/, src/commands/start.ts, src/commands/resume.ts, src/commands/template.ts]

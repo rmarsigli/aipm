@@ -13,9 +13,11 @@ interface TemplateOptions {
     list?: boolean
     print?: boolean
     edit?: boolean
+    logger?: { log: (msg: string) => void }
 }
 
 export async function template(name: string | undefined, options: TemplateOptions): Promise<void> {
+    const log = options.logger?.log || console.log
     const cwd = process.cwd()
     const projectDir = join(cwd, '.project')
 
@@ -46,7 +48,7 @@ export async function template(name: string | undefined, options: TemplateOption
         }
 
         if (!name) {
-            displayTemplateList(coreTemplatesDir, userTemplatesDir)
+            displayTemplateList(coreTemplatesDir, userTemplatesDir, log)
             return
         }
     }
@@ -109,52 +111,46 @@ export async function template(name: string | undefined, options: TemplateOption
 
     // Render Template
     const content = readFileSync(templatePath, 'utf-8')
-    const variables = getTemplateVariables(projectDir, cwd)
+    const variables = await getTemplateVariables(projectDir, cwd)
     const rendered = renderTemplate(content, variables)
 
     if (options.print) {
-        /* eslint-disable no-console */
-        console.log('\n' + chalk.blue('═'.repeat(60)))
-        console.log(rendered)
-        console.log(chalk.blue('═'.repeat(60)) + '\n')
-        /* eslint-enable no-console */
+        log('\n' + chalk.blue('═'.repeat(60)))
+        log(rendered)
+        log(chalk.blue('═'.repeat(60)) + '\n')
     } else {
         const copied = await copyToClipboard(rendered)
         if (copied) {
             logger.success(`Template '${name}' copied to clipboard!`)
         } else {
             logger.warn('Could not copy to clipboard. Printing instead...')
-            /* eslint-disable-next-line no-console */
-            console.log(rendered)
+
+            log(rendered)
         }
     }
 }
 
-function displayTemplateList(coreDir: string, userDir: string): void {
-    /* eslint-disable no-console */
-    console.log(chalk.blue.bold('\nCore Templates:'))
+function displayTemplateList(coreDir: string, userDir: string, log: (msg: string) => void): void {
+    log(chalk.blue.bold('\nCore Templates:'))
     if (existsSync(coreDir)) {
         const coreFiles = readdirSync(coreDir).filter((f) => f.endsWith('.md'))
-        coreFiles.forEach((f) => console.log(`  - ${f.replace('.md', '')}`))
+        coreFiles.forEach((f) => log(`  - ${f.replace('.md', '')}`))
     } else {
-        console.log(chalk.gray('  (No core templates found)'))
+        log(chalk.gray('  (No core templates found)'))
     }
-    /* eslint-enable no-console */
 
-    /* eslint-disable no-console */
-    console.log(chalk.blue.bold('\nCustom Templates (.project/prompts/):'))
+    log(chalk.blue.bold('\nCustom Templates (.project/prompts/):'))
     if (existsSync(userDir)) {
         const userFiles = readdirSync(userDir).filter((f) => f.endsWith('.md'))
         if (userFiles.length > 0) {
-            userFiles.forEach((f) => console.log(`  - ${f.replace('.md', '')}`))
+            userFiles.forEach((f) => log(`  - ${f.replace('.md', '')}`))
         } else {
-            console.log(chalk.gray('  (None)'))
+            log(chalk.gray('  (None)'))
         }
     } else {
-        console.log(chalk.gray('  (None)'))
+        log(chalk.gray('  (None)'))
     }
-    console.log('')
-    /* eslint-enable no-console */
+    log('')
 }
 
 async function createCustomTemplate(projectDir: string, name: string): Promise<void> {

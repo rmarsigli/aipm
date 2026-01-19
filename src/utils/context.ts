@@ -1,6 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
-import { execSync } from 'child_process'
+import { gitBranch, gitLog } from './git.js'
 
 export function getProjectName(cwd: string): string {
     const packageJsonPath = join(cwd, 'package.json')
@@ -15,35 +15,20 @@ export function getProjectName(cwd: string): string {
     return cwd.split('/').pop() || 'Unknown'
 }
 
-export function getCurrentBranch(cwd: string): string {
-    try {
-        const branch = execSync('git rev-parse --abbrev-ref HEAD', {
-            cwd,
-            encoding: 'utf-8'
-        }).trim()
-        return branch
-    } catch {
-        return 'N/A'
-    }
+export async function getCurrentBranch(cwd: string): Promise<string> {
+    return gitBranch(cwd).then((b) => b || 'N/A')
 }
 
-export function getRecentCommits(cwd: string, count: number): Array<{ hash: string; message: string }> {
-    try {
-        const output = execSync(`git log -${count} --pretty=format:"%h||%s"`, {
-            cwd,
-            encoding: 'utf-8'
+export async function getRecentCommits(cwd: string, count: number): Promise<Array<{ hash: string; message: string }>> {
+    const output = await gitLog(count, '%h||%s', cwd)
+    if (!output) return []
+    return output
+        .split('\n')
+        .filter((line) => line.trim())
+        .map((line) => {
+            const [hash, ...rest] = line.split('||')
+            return { hash, message: rest.join('||') }
         })
-        return output
-            .trim()
-            .split('\n')
-            .filter((line) => line.trim())
-            .map((line) => {
-                const [hash, ...rest] = line.split('||')
-                return { hash, message: rest.join('||') }
-            })
-    } catch {
-        return []
-    }
 }
 
 export function parseContext(content: string): {

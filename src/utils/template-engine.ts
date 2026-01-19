@@ -1,14 +1,15 @@
 import { readFileSync, existsSync } from 'fs'
 import { join } from 'path'
-import { execSync } from 'child_process'
+import { gitDiff, gitLogToday, gitLastCommit } from './git.js'
+import { FILES } from '@/constants.js'
 import { TemplateVariables } from '../prompts/templates/variables.js'
 import { parseContext, parseTask, getCurrentBranch } from './context.js'
 
-export function getTemplateVariables(projectDir: string, cwd: string): Record<string, string> {
+export async function getTemplateVariables(projectDir: string, cwd: string): Promise<Record<string, string>> {
     const variables: Partial<TemplateVariables> = {}
 
     // 1. Task Context
-    const taskPath = join(projectDir, 'current-task.md')
+    const taskPath = join(projectDir, FILES.CURRENT_TASK_FILE)
     if (existsSync(taskPath)) {
         try {
             const taskContent = readFileSync(taskPath, 'utf-8')
@@ -46,7 +47,7 @@ export function getTemplateVariables(projectDir: string, cwd: string): Record<st
     }
 
     // 2. Session Context
-    const contextPath = join(projectDir, 'context.md')
+    const contextPath = join(projectDir, FILES.CONTEXT_FILE)
     if (existsSync(contextPath)) {
         try {
             const contextContent = readFileSync(contextPath, 'utf-8')
@@ -60,11 +61,11 @@ export function getTemplateVariables(projectDir: string, cwd: string): Record<st
         }
     }
 
-    // 3. Git Context
-    variables.current_branch = getCurrentBranch(cwd)
-    variables.git_diff_stat = getGitDiffStat(cwd)
-    variables.git_log_today = getGitLogToday(cwd)
-    variables.last_commit = getLastCommit(cwd)
+    // 3. Git Context (async)
+    variables.current_branch = await getCurrentBranch(cwd)
+    variables.git_diff_stat = await gitDiff(cwd)
+    variables.git_log_today = await gitLogToday(cwd)
+    variables.last_commit = await gitLastCommit(cwd)
 
     // 4. Defaults for others
     variables.current_file = '{{current_file}}' // Expect user to fill
@@ -87,28 +88,4 @@ export function renderTemplate(content: string, variables: Record<string, string
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         return variables[key] || match // Keep {{variable}} if not found
     })
-}
-
-function getGitDiffStat(cwd: string): string {
-    try {
-        return execSync('git diff --stat', { cwd, encoding: 'utf-8' }).trim() || 'No changes'
-    } catch {
-        return 'N/A'
-    }
-}
-
-function getGitLogToday(cwd: string): string {
-    try {
-        return execSync('git log --since="midnight" --oneline', { cwd, encoding: 'utf-8' }).trim() || 'No commits today'
-    } catch {
-        return 'N/A'
-    }
-}
-
-function getLastCommit(cwd: string): string {
-    try {
-        return execSync('git log -1 --oneline', { cwd, encoding: 'utf-8' }).trim()
-    } catch {
-        return 'N/A'
-    }
 }

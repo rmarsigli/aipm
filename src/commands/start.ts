@@ -2,6 +2,7 @@ import { logger } from '@/utils/logger.js'
 import { existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 import chalk from 'chalk'
+import { FILES } from '@/constants.js'
 import {
     getProjectName,
     getCurrentBranch,
@@ -17,9 +18,11 @@ export interface StartOptions {
     file?: string
     full?: boolean
     verbose?: boolean
+    logger?: { log: (msg: string) => void }
 }
 
 export async function start(options: StartOptions = {}): Promise<void> {
+    const log = options.logger?.log || console.log
     const cwd = process.cwd()
     const projectDir = join(cwd, '.project')
 
@@ -31,19 +34,18 @@ export async function start(options: StartOptions = {}): Promise<void> {
 
     logger.info('Generating session prompt...')
 
-    const prompt = generateSessionPrompt(projectDir, cwd, options)
+    const prompt = await generateSessionPrompt(projectDir, cwd, options)
 
     if (options.print) {
         // Print mode
-        /* eslint-disable no-console */
-        console.log('\n' + chalk.blue('═'.repeat(60)))
-        console.log(chalk.blue.bold('  AIPIM SESSION PROMPT'))
-        console.log(chalk.blue('═'.repeat(60)) + '\n')
-        console.log(prompt)
-        console.log('\n' + chalk.blue('═'.repeat(60)))
-        console.log(chalk.gray('Copy the prompt above and paste into your AI chat.'))
-        console.log(chalk.blue('═'.repeat(60)) + '\n')
-        /* eslint-enable no-console */
+
+        log('\n' + chalk.blue('═'.repeat(60)))
+        log(chalk.blue.bold('  AIPIM SESSION PROMPT'))
+        log(chalk.blue('═'.repeat(60)) + '\n')
+        log(prompt)
+        log('\n' + chalk.blue('═'.repeat(60)))
+        log(chalk.gray('Copy the prompt above and paste into your AI chat.'))
+        log(chalk.blue('═'.repeat(60)) + '\n')
     } else if (options.file) {
         // File mode
         const fs = await import('fs-extra')
@@ -53,16 +55,14 @@ export async function start(options: StartOptions = {}): Promise<void> {
         // Clipboard mode (try to copy, fallback to print)
         const copied = await copyToClipboard(prompt)
         if (copied) {
-            /* eslint-disable no-console */
-            console.log('')
-            console.log(chalk.green('[OK]') + ' Session prompt copied to clipboard!')
-            console.log('')
-            console.log(chalk.gray('Next steps:'))
-            console.log(chalk.gray('  1. Open your AI chat (Claude.ai, Gemini, ChatGPT)'))
-            console.log(chalk.gray('  2. Paste with Ctrl+V (or Cmd+V on Mac)'))
-            console.log(chalk.gray('  3. Start developing!'))
-            console.log('')
-            /* eslint-enable no-console */
+            log('')
+            log(chalk.green('[OK]') + ' Session prompt copied to clipboard!')
+            log('')
+            log(chalk.gray('Next steps:'))
+            log(chalk.gray('  1. Open your AI chat (Claude.ai, Gemini, ChatGPT)'))
+            log(chalk.gray('  2. Paste with Ctrl+V (or Cmd+V on Mac)'))
+            log(chalk.gray('  3. Start developing!'))
+            log('')
         } else {
             logger.warn('Could not copy to clipboard. Printing instead...')
             // Fallback to print mode
@@ -71,7 +71,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
     }
 }
 
-function generateSessionPrompt(projectDir: string, cwd: string, options: StartOptions): string {
+async function generateSessionPrompt(projectDir: string, cwd: string, options: StartOptions): Promise<string> {
     const parts: string[] = []
 
     // Header
@@ -83,7 +83,7 @@ function generateSessionPrompt(projectDir: string, cwd: string, options: StartOp
     parts.push('')
 
     // Context.md
-    const contextPath = join(projectDir, 'context.md')
+    const contextPath = join(projectDir, FILES.CONTEXT_FILE)
     if (existsSync(contextPath)) {
         const context = readFileSync(contextPath, 'utf-8')
         const { frontmatter, currentState, nextAction } = parseContext(context)
@@ -93,7 +93,7 @@ function generateSessionPrompt(projectDir: string, cwd: string, options: StartOp
             : []
 
         parts.push(`**Session:** ${String(frontmatter.session) || 'N/A'}`)
-        parts.push(`**Branch:** ${activeBranches[0] || getCurrentBranch(cwd)}`)
+        parts.push(`**Branch:** ${activeBranches[0] || (await getCurrentBranch(cwd))}`)
         parts.push(`**Next Action:** ${nextAction || 'Not specified'}`)
         parts.push('')
 
@@ -102,13 +102,13 @@ function generateSessionPrompt(projectDir: string, cwd: string, options: StartOp
         parts.push(currentState || 'No context available.')
         parts.push('')
     } else {
-        logger.warn('No context.md found')
-        parts.push('**Status:** No context.md found (run after first session)')
+        logger.warn(`No ${FILES.CONTEXT_FILE} found`)
+        parts.push(`**Status:** No ${FILES.CONTEXT_FILE} found (run after first session)`)
         parts.push('')
     }
 
     // Current task
-    const taskPath = join(projectDir, 'current-task.md')
+    const taskPath = join(projectDir, FILES.CURRENT_TASK_FILE)
     if (existsSync(taskPath)) {
         const task = readFileSync(taskPath, 'utf-8')
         const taskInfo = parseTask(task)
@@ -134,11 +134,11 @@ function generateSessionPrompt(projectDir: string, cwd: string, options: StartOp
     }
 
     // Recent commits
-    const commits = getRecentCommits(cwd, options.full ? 10 : 3)
+    const commits = await getRecentCommits(cwd, options.full ? 10 : 3)
     if (commits.length > 0) {
         parts.push('## Recent Commits')
         parts.push('')
-        commits.forEach((commit, i) => {
+        commits.forEach((commit: { hash: string; message: string }, i: number) => {
             parts.push(`${i + 1}. \`${commit.hash}\` ${commit.message}`)
         })
         parts.push('')

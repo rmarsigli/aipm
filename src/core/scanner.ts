@@ -27,7 +27,7 @@ export class ProjectScanner {
             ...['backlog.md', 'decisions.md', 'completed.md'].map((f) => path.join(FILES.PROJECT_DIR, f))
         ]
 
-        for (const relativePath of targets) {
+        const tasks = targets.map(async (relativePath) => {
             const absolutePath = path.join(projectRoot, relativePath)
             let status: FileStatus = 'missing'
 
@@ -36,20 +36,18 @@ export class ProjectScanner {
                     const content = await fs.readFile(absolutePath, 'utf-8')
                     status = signatureManager.verify(content)
                 } catch {
-                    // treat read errors as missing or specific error?
-                    // For now, if we can't read, we can't verify, treating as legacy/unknown might be safer
-                    // but 'missing' is technically wrong if it exists.
-                    // Let's assume 'legacy' for unreadable/binary edge cases to avoid overwrite.
                     status = 'legacy'
                 }
             }
 
-            results.push({
+            return {
                 path: absolutePath,
                 relativePath,
                 status
-            })
-        }
+            }
+        })
+
+        results.push(...(await Promise.all(tasks)))
 
         return results
     }

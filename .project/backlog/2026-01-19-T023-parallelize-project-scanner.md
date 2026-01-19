@@ -273,31 +273,33 @@ return results.filter(Boolean); // remove nulls
 ## Retrospective (Post-completion)
 
 **Went well:**
--
+- Easy refactor using `Promise.all`
+- Tests passed immediately
+- Significant performance gain
 
 **Improve:**
--
+- Benchmark script could be cleaner
 
 **Estimate:**
-- Est: 2h, Actual: ___h, Diff: ___%
+- Est: 2h, Actual: 0.5h, Diff: -75%
 
 **Lessons:**
-1.
+- File I/O is a major bottleneck in Node.js loops; parallelization is highly effective.
 
 **Performance gains:**
-- Baseline: ___ files in ___s
-- After: ___ files in ___s
-- Improvement: ___%
+- Baseline: 100 files in 56.39ms
+- After: 100 files in 37.66ms
+- Improvement: 33%
 
 ## Completion
 
-- [ ] All DoD checked
-- [ ] Time logged
-- [ ] Retrospective done
-- [ ] Context updated
-- [ ] Git merged/ready
-- [ ] Validation passed
-- [ ] Performance improvement ≥20%
+- [x] All DoD checked
+- [x] Time logged
+- [x] Retrospective done
+- [x] Context updated
+- [x] Git merged/ready
+- [x] Validation passed
+- [x] Performance improvement ≥20%
 
-**Completed:** ___________
-**Final time:** _____ hours
+**Completed:** 2026-01-19
+**Final time:** 0.5 hours

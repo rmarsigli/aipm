@@ -26,19 +26,27 @@ Previous sessions: T015, T013, T012, T011, T008, T007 all COMPLETED.
 
 # Active Work
 
-**Status:** Sprint 1 COMPLETE ✅ (4/4 tasks done). v1.1.3 ready for release.
+**Status:** Sprint 2 STARTED (Testing Infrastructure). v1.1.3 released.
+
+**Active Task (T022):** Add Unit Tests for Commands
+- Goal: Create Jest unit tests for `start`, `resume`, `template`
+- Status: Planning
+
+**Sprint 2 Progress:**
+- ✅ T020: (Skipped/Deferred - pure utils already exist)
+- ✅ T021: Add Jest Coverage Reporting (Threshold: 60%)
 
 **Sprint 1 - ALL COMPLETED:**
 - ✅ T016: Fixed package.json URLs
 - ✅ T017: Fixed completion.ts binary name
-- ✅ T018: Verified resume.ts (no truncation - code is correct)
-- ✅ T019: Removed diff command stub (ADR005 created)
+- ✅ T018: Verified resume.ts
+- ✅ T019: Removed diff command stub
 
 **Ready to Ship:**
-- v1.1.3 patch release (all critical blockers fixed)
-- Quality score improvement: 80.6 → ~82.0 (estimated)
+- v1.1.3 released
+- coverage-report available (pnpm test:coverage)
 
-**Next action:** Ship v1.1.3, then begin Sprint 2 (testing infrastructure)
+**Next action:** Plan and implement command tests (T022)
 
 **Other backlog tasks:**
 - TASK-003: ADR Automation (5h) - P2-M

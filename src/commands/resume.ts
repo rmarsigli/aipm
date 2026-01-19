@@ -1,8 +1,10 @@
 import { logger } from '@/utils/logger.js'
 import { existsSync, readFileSync } from 'fs'
+import { unlink } from 'fs/promises'
 import { join } from 'path'
 import chalk from 'chalk'
-import { execSync } from 'child_process'
+import { FILES } from '@/constants.js'
+import { git, gitLog } from '@/utils/git.js'
 import { confirm } from '@inquirer/prompts'
 import { start } from './start.js'
 import { parseContext, parseTask, calculateProgress, extractCheckpoints, extractObjective } from '@/utils/context.js'
@@ -10,9 +12,11 @@ import { parseContext, parseTask, calculateProgress, extractCheckpoints, extract
 export interface ResumeOptions {
     auto?: boolean
     verbose?: boolean
+    logger?: { log: (msg: string) => void }
 }
 
 export async function resume(options: ResumeOptions = {}): Promise<void> {
+    const log = options.logger?.log || console.log
     const cwd = process.cwd()
     const projectDir = join(cwd, '.project')
 
@@ -43,24 +47,23 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
             const snapshot = JSON.parse(snapshotContent) as Snapshot
 
             // Show interruption banner
-            /* eslint-disable no-console */
-            console.log('')
-            console.log(chalk.red('📎 Interruption Detected'))
-            console.log(chalk.gray(`   Paused: ${new Date(snapshot.timestamp).toLocaleString()}`))
-            console.log(chalk.gray(`   Reason: ${snapshot.reason}`))
-            console.log('')
 
-            console.log(chalk.bold('🎯 Context at pause:'))
-            console.log(`   Task: ${snapshot.task?.title || 'Unknown'}`)
+            log('')
+            log(chalk.red('📎 Interruption Detected'))
+            log(chalk.gray(`   Paused: ${new Date(snapshot.timestamp).toLocaleString()}`))
+            log(chalk.gray(`   Reason: ${snapshot.reason}`))
+            log('')
+
+            log(chalk.bold('🎯 Context at pause:'))
+            log(`   Task: ${snapshot.task?.title || 'Unknown'}`)
 
             if (snapshot.git?.is_dirty) {
-                console.log(chalk.yellow('   ⚠️  Uncommitted changes were detected.'))
+                log(chalk.yellow('   ⚠️  Uncommitted changes were detected.'))
                 if (snapshot.git.stash_hash) {
-                    console.log(chalk.green('      (Stashed automatically)'))
+                    log(chalk.green('      (Stashed automatically)'))
                 }
             }
-            console.log('')
-            /* eslint-enable no-console */
+            log('')
 
             const action = await confirm({
                 message: 'Restore interrupted session?',
@@ -70,11 +73,10 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
             if (action) {
                 // Restore logic
                 if (snapshot.git?.stash_hash) {
-                    /* eslint-disable no-console */
-                    console.log('🔄 Restoring stashed changes...')
+                    log('🔄 Restoring stashed changes...')
                     try {
-                        execSync('git stash pop')
-                        console.log('✅ Changes restored.')
+                        await git(['stash', 'pop'])
+                        log('✅ Changes restored.')
                     } catch (e) {
                         console.error(
                             chalk.red(
@@ -82,30 +84,27 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
                             )
                         )
                     }
-                    /* eslint-enable no-console */
                 }
 
                 // Remove snapshot
-                execSync(`rm ${snapshotPath}`)
+                await unlink(snapshotPath)
 
-                /* eslint-disable-next-line no-console */
-                console.log(chalk.green('\n✅ Context restored. Resuming work...'))
-                await start({ print: false })
+                log(chalk.green('\n✅ Context restored. Resuming work...'))
+                await start({ print: false, logger: options.logger })
                 return
             } else {
-                /* eslint-disable-next-line no-console */
-                console.log(chalk.gray('Discarding snapshot...'))
-                execSync(`rm ${snapshotPath}`)
+                log(chalk.gray('Discarding snapshot...'))
+                await unlink(snapshotPath)
             }
         } catch (e) {
             console.error('Error reading snapshot:', e)
         }
     }
 
-    const resumeData = generateResumeSummary(projectDir, cwd)
+    const resumeData = await generateResumeSummary(projectDir, cwd)
 
     // Display summary
-    displayResumeSummary(resumeData)
+    displayResumeSummary(resumeData, log)
 
     // Interactive continuation
     if (!options.auto) {
@@ -115,20 +114,17 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
         })
 
         if (answer) {
-            /* eslint-disable no-console */
-            console.log('')
-            /* eslint-enable no-console */
-            await start({ print: false })
+            log('')
+
+            await start({ print: false, logger: options.logger })
         } else {
-            /* eslint-disable no-console */
-            console.log('')
-            console.log(chalk.gray('Run `aipim start` when ready to continue.'))
-            console.log('')
-            /* eslint-enable no-console */
+            log('')
+            log(chalk.gray('Run `aipim start` when ready to continue.'))
+            log('')
         }
     } else {
         // Auto mode: go straight to start
-        await start({ print: false })
+        await start({ print: false, logger: options.logger })
     }
 }
 
@@ -160,9 +156,9 @@ interface ResumeSummary {
     status: 'active' | 'no-task' | 'completed' | 'fresh'
 }
 
-function generateResumeSummary(projectDir: string, cwd: string): ResumeSummary {
+async function generateResumeSummary(projectDir: string, cwd: string): Promise<ResumeSummary> {
     // Parse context.md
-    const contextPath = join(projectDir, 'context.md')
+    const contextPath = join(projectDir, FILES.CONTEXT_FILE)
     let lastUpdated = new Date()
     let nextAction = 'Not specified'
 
@@ -178,7 +174,7 @@ function generateResumeSummary(projectDir: string, cwd: string): ResumeSummary {
     const sessionAge = formatSessionAge(lastUpdated)
 
     // Parse current task
-    const taskPath = join(projectDir, 'current-task.md')
+    const taskPath = join(projectDir, FILES.CURRENT_TASK_FILE)
     let taskData: ResumeSummary['task'] = null
     let status: ResumeSummary['status'] = 'no-task'
 
@@ -211,17 +207,10 @@ function generateResumeSummary(projectDir: string, cwd: string): ResumeSummary {
 
     // Get last commit
     let lastCommit: ResumeSummary['lastCommit'] = null
-    try {
-        const output = execSync('git log -1 --pretty=format:"%h||%s"', {
-            cwd,
-            encoding: 'utf-8'
-        })
-        if (output.trim()) {
-            const [hash, ...rest] = output.split('||')
-            lastCommit = { hash, message: rest.join('||') }
-        }
-    } catch {
-        // No git or no commits
+    const output = await gitLog(1, '%h||%s', cwd)
+    if (output.trim()) {
+        const [hash, ...rest] = output.split('||')
+        lastCommit = { hash, message: rest.join('||') }
     }
 
     // Determine status
@@ -238,97 +227,95 @@ function generateResumeSummary(projectDir: string, cwd: string): ResumeSummary {
     }
 }
 
-function displayResumeSummary(data: ResumeSummary): void {
-    /* eslint-disable no-console */
-    console.log('')
-    console.log(chalk.blue('═'.repeat(60)))
-    console.log(chalk.blue.bold('  AIPIM SESSION RESUME'))
-    console.log(chalk.blue('═'.repeat(60)))
-    console.log('')
+function displayResumeSummary(data: ResumeSummary, log: (msg: string) => void): void {
+    log('')
+    log(chalk.blue('═'.repeat(60)))
+    log(chalk.blue.bold('  AIPIM SESSION RESUME'))
+    log(chalk.blue('═'.repeat(60)))
+    log('')
 
     // Session age
-    console.log(`${data.sessionAge.indicator} Last Session: ${chalk.bold(data.sessionAge.text)}`)
-    console.log('')
+    log(`${data.sessionAge.indicator} Last Session: ${chalk.bold(data.sessionAge.text)}`)
+    log('')
 
     // Handle different statuses
     if (data.status === 'fresh') {
-        console.log(chalk.green('[FRESH] Fresh! You just stopped working.'))
-        console.log('')
+        log(chalk.green('[FRESH] Fresh! You just stopped working.'))
+        log('')
     }
 
     if (data.status === 'no-task') {
-        console.log(chalk.yellow('[WARN] No active task'))
-        console.log(chalk.gray('  Run `aipim task list` to see available tasks'))
-        console.log('')
+        log(chalk.yellow('[WARN] No active task'))
+        log(chalk.gray('  Run `aipim task list` to see available tasks'))
+        log('')
         if (data.lastCommit) {
-            console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
+            log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         }
-        console.log(chalk.blue('═'.repeat(60)))
+        log(chalk.blue('═'.repeat(60)))
         return
     }
 
     if (data.status === 'completed') {
-        console.log(chalk.green('[DONE] Task completed!'))
-        console.log(chalk.gray('  Choose your next task from the backlog'))
-        console.log('')
+        log(chalk.green('[DONE] Task completed!'))
+        log(chalk.gray('  Choose your next task from the backlog'))
+        log('')
         if (data.lastCommit) {
-            console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
+            log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         }
-        console.log(chalk.blue('═'.repeat(60)))
+        log(chalk.blue('═'.repeat(60)))
 
         return
     }
 
     // Active task
     if (data.task) {
-        console.log(chalk.bold('You were working on:'), chalk.cyan(data.task.title))
+        log(`${chalk.bold('You were working on:')} ${chalk.cyan(data.task.title)}`)
         if (data.task.phase) {
-            console.log(chalk.gray(`   ${data.task.phase} (${data.task.estimatedHours}h estimated)`))
+            log(chalk.gray(`   ${data.task.phase} (${data.task.estimatedHours}h estimated)`))
         }
-        console.log(
+        log(
             chalk.gray(
                 `   Progress: ${data.task.progress.completed}/${data.task.progress.total} checkboxes (${data.task.progress.percentage}%)`
             )
         )
-        console.log('')
+        log('')
 
         // Checkpoints
-        console.log(chalk.bold('You stopped at:'))
+        log(chalk.bold('You stopped at:'))
         if (data.task.lastCompleted.length > 0) {
             data.task.lastCompleted.forEach((item) => {
-                console.log(chalk.green(`   [x] ${item}`))
+                log(chalk.green(`   [x] ${item}`))
             })
         }
         if (data.task.currentItem) {
-            console.log(chalk.yellow(`   >> Working on: ${data.task.currentItem}`))
+            log(chalk.yellow(`   >> Working on: ${data.task.currentItem}`))
         }
         if (data.task.nextItem) {
-            console.log(chalk.gray(`   -- Next: ${data.task.nextItem}`))
+            log(chalk.gray(`   -- Next: ${data.task.nextItem}`))
         }
-        console.log('')
+        log('')
 
         // Context
         if (data.task.objective) {
-            console.log(chalk.bold('Quick context:'))
-            console.log(chalk.gray(`   ${data.task.objective}`))
-            console.log('')
+            log(chalk.bold('Quick context:'))
+            log(chalk.gray(`   ${data.task.objective}`))
+            log('')
         }
 
         // Suggestion
-        console.log(chalk.bold('Suggested next action:'))
-        console.log(chalk.gray(`   ${data.nextAction}`))
-        console.log('')
+        log(chalk.bold('Suggested next action:'))
+        log(chalk.gray(`   ${data.nextAction}`))
+        log('')
     }
 
     // Last commit
     if (data.lastCommit) {
-        console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
-        console.log('')
+        log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
+        log('')
     }
 
-    console.log(chalk.blue('═'.repeat(60)))
-    console.log('')
-    /* eslint-enable no-console */
+    log(chalk.blue('═'.repeat(60)))
+    log('')
 }
 
 function formatSessionAge(lastUpdated: Date): { text: string; indicator: string; hours: number } {
