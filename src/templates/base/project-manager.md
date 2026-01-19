@@ -31,6 +31,10 @@
 3. Review last commit: `git log -1 --oneline`
 4. Continue from next_action
 
+**Interruption Recovery:**
+- Use `aipim pause --reason="..."` to save state optionally stashing changes.
+- Use `aipim resume` to restore context and stashed work.
+
 **During:**
 - Update task checkboxes as completed
 - Commit frequently
@@ -39,9 +43,13 @@
 **End:**
 1. Update `current-task.md`: actual_hours, checkboxes
 2. Update `context.md`: session++, next_action, summary
-3. **Run Quality Check (Optional):** `.project/scripts/analyze-quality.sh --manual`
-4. **Update metrics** (see Metrics Protocol below)
-5. Commit & push
+3. Check `aipim deps` to ensure no blockers
+4. Select next task from backlog (priority + dependencies)
+5. Move to `current-task.md`
+6. Update `context.md`: session++, next_action, summary
+7. **Run Quality Check (Optional):** `.project/scripts/analyze-quality.sh --manual`
+8. **Update metrics** (see Metrics Protocol below)
+9. Commit & push
 
 ## Large Task Auto-Breakdown Protocol
 

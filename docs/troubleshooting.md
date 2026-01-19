@@ -1,33 +1,45 @@
-# Troubleshooting
+# Troubleshooting Guide
 
-## AI creates incomplete tasks
+Common issues and solutions when using AIPIM.
 
-**Fix:** Be explicit
-```
-"Create task using .project/_templates/v1/task-template.md"
-```
+## Git Issues
 
-## Context restoration slow
+### "Conflict during resume"
+**Symptom:** `aipim resume` fails to pop the stash due to conflicts.
+**Solution:**
+1.  Manually resolve conflicts in your editor.
+2.  Stage resolved files: `git add .`
+3.  Drop the stash manually if needed: `git stash drop`
 
-**Fix:** Improve context.md quality
-- More specific "Current State" (2-3 sentences)
-- Clear "Next Action" (exactly what to do)
-- Recent decisions (why choices were made)
+## Task Issues
 
-## Hitting token limits frequently
+### "Circular Dependencies Detected"
+**Symptom:** `aipim deps` shows an error about cycles.
+**Cause:** Task A depends on B, and B depends on A.
+**Solution:**
+1.  Edit the frontmatter of the affected tasks in `.project/backlog`.
+2.  Remove the offending `depends_on` entry.
 
-**Fix:**
-1. Archive old context sessions (keep last 3 only)
-2. Load fewer files in memory (use `view` tool)
-3. Clear conversation more often
+### "Task not found"
+**Symptom:** Commands cannot find your current task.
+**Solution:**
+Ensure your task file is exactly at `.project/current-task.md`.
 
-## DoD validation fails
+## CLI Issues
 
-**Fix:**
+### "Command not found: aipim"
+**Solution:**
+Ensure you have linked the package locally or installed it globally.
 ```bash
-# See what failed
-.project/scripts/validate-dod.sh
+npm link
+# or
+npm install -g .
+```
 
-# Fix issues, then re-run
-.project/scripts/validate-dod.sh
+### Permission Denied (Scripts)
+**Symptom:** `.project/scripts/xyz.sh: Permission denied`
+**Solution:**
+Make the script executable:
+```bash
+chmod +x .project/scripts/*.sh
 ```

@@ -8,6 +8,9 @@ actual_hours: 0
 status: backlog
 blockers: []
 tags: [backend, api]
+depends_on: []
+blocks: []
+dependency_type: hard
 related_files: []
 ---
 

@@ -143,6 +143,12 @@ program
         }
     })
 
+import { deps } from './commands/deps.js'
+program.addCommand(deps)
+
+import { pause } from './commands/pause.js'
+program.addCommand(pause)
+
 import { template } from './commands/template.js'
 
 program

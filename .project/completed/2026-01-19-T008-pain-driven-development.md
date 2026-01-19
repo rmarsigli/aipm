@@ -4,8 +4,8 @@ created: 2026-01-18T19:10:00-03:00
 last_updated: 2026-01-18T19:10:00-03:00
 priority: P3
 estimated_hours: 4
-actual_hours: 0
-status: backlog
+actual_hours: 1
+status: done
 blockers: []
 tags: [workflow, testing, automation]
 related_files: [src/templates/base/.project/_templates/task-template.md]
@@ -250,7 +250,7 @@ done
 
 ## Completion
 
-- [ ] All DoD checked
-- [ ] Time logged
-- [ ] Context updated
-- [ ] Documentation complete
+- [x] All DoD checked
+- [x] Time logged
+- [x] Context updated
+- [x] Documentation complete

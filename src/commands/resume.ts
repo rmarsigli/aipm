@@ -21,6 +21,86 @@ export async function resume(options: ResumeOptions = {}): Promise<void> {
         process.exit(1)
     }
 
+    const snapshotPath = join(projectDir, '.interruption-snapshot.json')
+
+    // Check for interruption snapshot first
+    if (existsSync(snapshotPath)) {
+        try {
+            const snapshotContent = readFileSync(snapshotPath, 'utf-8')
+            interface Snapshot {
+                timestamp: string | number | Date
+                reason: string
+                task?: {
+                    title: string
+                }
+                git?: {
+                    is_dirty: boolean
+                    stash_hash?: string
+                }
+            }
+
+            const snapshot = JSON.parse(snapshotContent) as Snapshot
+
+            // Show interruption banner
+            /* eslint-disable no-console */
+            console.log('')
+            console.log(chalk.red('📎 Interruption Detected'))
+            console.log(chalk.gray(`   Paused: ${new Date(snapshot.timestamp).toLocaleString()}`))
+            console.log(chalk.gray(`   Reason: ${snapshot.reason}`))
+            console.log('')
+
+            console.log(chalk.bold('🎯 Context at pause:'))
+            console.log(`   Task: ${snapshot.task?.title || 'Unknown'}`)
+
+            if (snapshot.git?.is_dirty) {
+                console.log(chalk.yellow('   ⚠️  Uncommitted changes were detected.'))
+                if (snapshot.git.stash_hash) {
+                    console.log(chalk.green('      (Stashed automatically)'))
+                }
+            }
+            console.log('')
+            /* eslint-enable no-console */
+
+            const action = await confirm({
+                message: 'Restore interrupted session?',
+                default: true
+            })
+
+            if (action) {
+                // Restore logic
+                if (snapshot.git?.stash_hash) {
+                    /* eslint-disable no-console */
+                    console.log('🔄 Restoring stashed changes...')
+                    try {
+                        execSync('git stash pop')
+                        console.log('✅ Changes restored.')
+                    } catch (e) {
+                        console.error(
+                            chalk.red(
+                                `❌ Failed to pop stash. You may need to resolve conflicts manually. (${String(e)})`
+                            )
+                        )
+                    }
+                    /* eslint-enable no-console */
+                }
+
+                // Remove snapshot
+                execSync(`rm ${snapshotPath}`)
+
+                /* eslint-disable-next-line no-console */
+                console.log(chalk.green('\n✅ Context restored. Resuming work...'))
+                await start({ print: false })
+                return
+            } else {
+                /* eslint-disable-next-line no-console */
+                console.log(chalk.gray('Discarding snapshot...'))
+                execSync(`rm ${snapshotPath}`)
+            }
+        } catch (e) {
+            console.error('Error reading snapshot:', e)
+        }
+    }
+
     const resumeData = generateResumeSummary(projectDir, cwd)
 
     // Display summary
@@ -183,7 +263,6 @@ function displayResumeSummary(data: ResumeSummary): void {
             console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         }
         console.log(chalk.blue('═'.repeat(60)))
-        /* eslint-enable no-console */
         return
     }
 
@@ -248,6 +327,7 @@ function displayResumeSummary(data: ResumeSummary): void {
 
     console.log(chalk.blue('═'.repeat(60)))
     console.log('')
+    /* eslint-enable no-console */
 }
 
 function formatSessionAge(lastUpdated: Date): { text: string; indicator: string; hours: number } {

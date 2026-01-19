@@ -124,6 +124,7 @@ export async function template(name: string | undefined, options: TemplateOption
             logger.success(`Template '${name}' copied to clipboard!`)
         } else {
             logger.warn('Could not copy to clipboard. Printing instead...')
+            /* eslint-disable-next-line no-console */
             console.log(rendered)
         }
     }
@@ -138,7 +139,9 @@ function displayTemplateList(coreDir: string, userDir: string): void {
     } else {
         console.log(chalk.gray('  (No core templates found)'))
     }
+    /* eslint-enable no-console */
 
+    /* eslint-disable no-console */
     console.log(chalk.blue.bold('\nCustom Templates (.project/prompts/):'))
     if (existsSync(userDir)) {
         const userFiles = readdirSync(userDir).filter((f) => f.endsWith('.md'))
