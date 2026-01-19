@@ -143,6 +143,25 @@ program
         }
     })
 
+import { template } from './commands/template.js'
+
+program
+    .command('template')
+    .argument('[name]', 'Name of the template (e.g., stuck, review, summary)')
+    .description('Generate prompt from template')
+    .option('--list', 'List available templates')
+    .option('--print', 'Print to terminal instead of clipboard')
+    .option('--edit', 'Edit the template (custom templates only)')
+    .action(async (name: string | undefined, options: unknown) => {
+        try {
+            await template(name, options as { list?: boolean; print?: boolean; edit?: boolean })
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\nError: ${message}\n`))
+            process.exit(1)
+        }
+    })
+
 import { completion } from './commands/completion.js'
 import { registerTaskCommand } from './commands/task.js'
 

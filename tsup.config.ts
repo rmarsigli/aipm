@@ -14,5 +14,6 @@ export default defineConfig({
     onSuccess: async () => {
         await fs.copyFile('package.json', 'dist/package.json')
         await fs.copy('src/templates', 'dist/templates')
+        await fs.copy('src/prompts', 'dist/prompts')
     }
 })
