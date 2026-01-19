@@ -7,6 +7,7 @@ import { install } from './commands/install.js'
 import { update } from './commands/update.js'
 import { diff } from './commands/diff.js'
 import { validate } from './commands/validate.js'
+import { start } from './commands/start.js'
 import { version } from './version.js'
 import { logger } from '@/utils/logger.js'
 
@@ -104,6 +105,22 @@ program
     .action(async () => {
         try {
             await validate()
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error)
+            console.error(chalk.red(`\nError: ${message}\n`))
+            process.exit(1)
+        }
+    })
+
+program
+    .command('start')
+    .description('Generate session prompt and copy to clipboard')
+    .option('--print', 'Print prompt to terminal instead of clipboard')
+    .option('--file <path>', 'Save prompt to file')
+    .option('--full', 'Include extended context (10 commits, all ADRs)')
+    .action(async (options: unknown) => {
+        try {
+            await start(options as { print?: boolean; file?: string; full?: boolean })
         } catch (error: unknown) {
             const message = error instanceof Error ? error.message : String(error)
             console.error(chalk.red(`\nError: ${message}\n`))
