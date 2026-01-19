@@ -15,13 +15,13 @@ export async function validate(): Promise<void> {
 
     for (const result of results) {
         if (result.status === 'pass') {
-            console.log(`${chalk.green('✔')} ${result.name}: ${chalk.gray(result.message)}`)
+            console.log(`${chalk.green('[OK]')} ${result.name}: ${chalk.gray(result.message)}`)
         } else if (result.status === 'warn') {
             hasWarnings = true
-            console.log(`${chalk.yellow('⚠')} ${result.name}: ${chalk.yellow(result.message)}`)
+            console.log(`${chalk.yellow('[WARN]')} ${result.name}: ${chalk.yellow(result.message)}`)
         } else {
             hasFailures = true
-            console.log(`${chalk.red('✖')} ${result.name}: ${chalk.red(result.message)}`)
+            console.log(`${chalk.red('[ERR]')} ${result.name}: ${chalk.red(result.message)}`)
         }
     }
 

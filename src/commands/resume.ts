@@ -161,7 +161,7 @@ function displayResumeSummary(data: ResumeSummary): void {
     /* eslint-disable no-console */
     console.log('')
     console.log(chalk.blue('═'.repeat(60)))
-    console.log(chalk.blue.bold('  📋 AIPIM SESSION RESUME'))
+    console.log(chalk.blue.bold('  AIPIM SESSION RESUME'))
     console.log(chalk.blue('═'.repeat(60)))
     console.log('')
 
@@ -171,16 +171,16 @@ function displayResumeSummary(data: ResumeSummary): void {
 
     // Handle different statuses
     if (data.status === 'fresh') {
-        console.log(chalk.green('✨ Fresh! You just stopped working.'))
+        console.log(chalk.green('[FRESH] Fresh! You just stopped working.'))
         console.log('')
     }
 
     if (data.status === 'no-task') {
-        console.log(chalk.yellow('⚠️  No active task'))
+        console.log(chalk.yellow('[WARN] No active task'))
         console.log(chalk.gray('  Run `aipim task list` to see available tasks'))
         console.log('')
         if (data.lastCommit) {
-            console.log(`📎 Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
+            console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         }
         console.log(chalk.blue('═'.repeat(60)))
         /* eslint-enable no-console */
@@ -188,11 +188,11 @@ function displayResumeSummary(data: ResumeSummary): void {
     }
 
     if (data.status === 'completed') {
-        console.log(chalk.green('✅ Task completed!'))
+        console.log(chalk.green('[DONE] Task completed!'))
         console.log(chalk.gray('  Choose your next task from the backlog'))
         console.log('')
         if (data.lastCommit) {
-            console.log(`📎 Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
+            console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         }
         console.log(chalk.blue('═'.repeat(60)))
 
@@ -201,7 +201,7 @@ function displayResumeSummary(data: ResumeSummary): void {
 
     // Active task
     if (data.task) {
-        console.log(chalk.bold('🎯 You were working on:'), chalk.cyan(data.task.title))
+        console.log(chalk.bold('You were working on:'), chalk.cyan(data.task.title))
         if (data.task.phase) {
             console.log(chalk.gray(`   ${data.task.phase} (${data.task.estimatedHours}h estimated)`))
         }
@@ -213,36 +213,36 @@ function displayResumeSummary(data: ResumeSummary): void {
         console.log('')
 
         // Checkpoints
-        console.log(chalk.bold('⏸️  You stopped at:'))
+        console.log(chalk.bold('You stopped at:'))
         if (data.task.lastCompleted.length > 0) {
             data.task.lastCompleted.forEach((item) => {
-                console.log(chalk.green(`   ✅ ${item}`))
+                console.log(chalk.green(`   [x] ${item}`))
             })
         }
         if (data.task.currentItem) {
-            console.log(chalk.yellow(`   🔄 Working on: ${data.task.currentItem}`))
+            console.log(chalk.yellow(`   >> Working on: ${data.task.currentItem}`))
         }
         if (data.task.nextItem) {
-            console.log(chalk.gray(`   ⏳ Next: ${data.task.nextItem}`))
+            console.log(chalk.gray(`   -- Next: ${data.task.nextItem}`))
         }
         console.log('')
 
         // Context
         if (data.task.objective) {
-            console.log(chalk.bold('🧠 Quick context:'))
+            console.log(chalk.bold('Quick context:'))
             console.log(chalk.gray(`   ${data.task.objective}`))
             console.log('')
         }
 
         // Suggestion
-        console.log(chalk.bold('💡 Suggested next action:'))
+        console.log(chalk.bold('Suggested next action:'))
         console.log(chalk.gray(`   ${data.nextAction}`))
         console.log('')
     }
 
     // Last commit
     if (data.lastCommit) {
-        console.log(`📎 Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
+        console.log(`Last commit: ${chalk.cyan(data.lastCommit.hash)} "${data.lastCommit.message}"`)
         console.log('')
     }
 
@@ -261,22 +261,22 @@ function formatSessionAge(lastUpdated: Date): { text: string; indicator: string;
 
     if (diffHours < 1) {
         text = 'less than an hour ago'
-        indicator = '🟢'
+        indicator = chalk.green('●')
     } else if (diffHours < 2) {
         text = `${diffHours} hour ago`
-        indicator = '🟢'
+        indicator = chalk.green('●')
     } else if (diffHours < 24) {
         text = `${diffHours} hours ago`
-        indicator = '🟡'
+        indicator = chalk.yellow('●')
     } else if (diffDays === 1) {
         text = '1 day ago'
-        indicator = '🟡'
+        indicator = chalk.yellow('●')
     } else if (diffDays < 7) {
         text = `${diffDays} days ago`
-        indicator = '🟡'
+        indicator = chalk.yellow('●')
     } else {
-        text = `${diffDays} days ago ⚠️  It's been a while!`
-        indicator = '🔴'
+        text = `${diffDays} days ago [!] It's been a while!`
+        indicator = chalk.red('●')
     }
 
     return { text, indicator, hours: diffHours }
