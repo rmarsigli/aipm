@@ -5,6 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.3] - 2026-01-19
+### Added
+- **Commands**: New `deps`, `pause`, and `resume` commands for improved workflow management.
+- **Documentation**: Comprehensive guides for CLI Reference, Advanced Usage, and Troubleshooting.
+- **Scripts**: `task-velocity.sh` for tracking progress velocity.
+
+### Changed
+- **Architecture**: Extracted parsing utilities to centralized `src/utils/context.ts` module (T020).
+- **UX**: Improved session resumption workflow with `resume` command.
+
+### Fixed
+- **Naming**: Corrected binary name and references from `aipm` to `aipim` throughout the codebase (T016, T017).
+- **Linting**: Resolved all linting errors in CLI commands and utilities.
+
+### Removed
+- **Redundancy**: Removed non-functional `diff` command in favor of `update --dry-run` (T019).
+
 ## [1.1.2] - 2026-01-07
 ### Added
 - **Documentation**: New `docs/basic-usage.md` guide covering core concepts, "Junior Dev" mindset, and advanced CLI features.
