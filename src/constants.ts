@@ -4,7 +4,7 @@ export const FILES = {
     GIT_DIR: '.git',
     NODE_MODULES: 'node_modules',
     PRE_SESSION_SCRIPT: '.project/scripts/pre-session.sh',
-    TASK_TEMPLATE: '.project/_templates/v1/task-template.md',
+    TASK_TEMPLATE: '.project/_templates/task.md',
     CURRENT_TASK: '.project/current-task.md',
     CURRENT_TASK_FILE: 'current-task.md',
     CONTEXT: '.project/context.md',

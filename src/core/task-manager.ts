@@ -41,7 +41,7 @@ export class TaskManager {
         const filePath = path.join(backlogDir, filename)
 
         // 2. Create File
-        const templatePath = path.join(templatesDir, 'base/.project/_templates/task-template.md')
+        const templatePath = path.join(templatesDir, 'base/.project/_templates/task.md')
         let content = ''
 
         if (await fs.pathExists(templatePath)) {

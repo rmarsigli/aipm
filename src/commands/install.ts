@@ -62,7 +62,7 @@ export async function install(options: InstallOptions = {}): Promise<void> {
     )
     logger.info(`  3. Run ${chalk.cyan('.project/scripts/pre-session.sh')} to verify setup`)
     logger.info(
-        `  4. Start coding! (Copy task template to start: ${chalk.cyan('cp .project/_templates/v1/task-template.md .project/current-task.md')})`
+        `  4. Start coding! (Copy task template to start: ${chalk.cyan('cp .project/_templates/task.md .project/current-task.md')})`
     )
 
     if (config.ais.includes('claude-code') || config.ais.includes('claude-ai')) {
