@@ -51,6 +51,43 @@
 8. **Update metrics** (see Metrics Protocol below)
 9. Commit & push
 
+## Task Workflow Protocol (MANDATORY)
+
+**When user says "do next task" or "start task X", you MUST follow this protocol:**
+
+**1. Context Loading (REQUIRED FIRST STEP):**
+- Read THIS FILE (GEMINI.md/CLAUDE.md) - contains MANDATORY project guidelines
+- Read `.project/context.md` - session state and metrics
+- Read `.project/backlog/` - check which task is next (or specified)
+- Count completed tasks in `.project/completed/` to know progress
+
+**2. Quality Gates (BEFORE marking task complete):**
+- [ ] All tests passing (`npm test` or equivalent)
+- [ ] No lint warnings (`npm run lint`)
+- [ ] Definition of Done satisfied (see DoD section above)
+- [ ] Code reviewed and clean (no debug code, console.logs, TODOs)
+
+**3. Git Commit (ONE atomic commit per task):**
+- Format: `type(scope): description` (SINGLE LINE ONLY)
+- Types: feat, fix, docs, style, refactor, test, chore
+- Example: `feat(task): implement user authentication`
+- NO multi-line commits, NO extra explanations in commit message
+
+**4. Context Awareness (CRITICAL):**
+- When your context window is running low (>70% used):
+  - ⚠️ WARN the user explicitly: "Context running low, recommend pausing"
+  - DO NOT continue to next task automatically
+  - Let user start fresh session to maintain quality
+- This prevents rushed work and maintains code quality
+
+**5. Session Integrity (CRUCIAL FOR QUALITY):**
+- NEVER pick up a session mid-task
+- Complete current task fully OR pause and let user resume later
+- One task = one complete cycle (start → implement → test → commit → done)
+- This ensures each task has full context and attention
+
+**Why this matters:** Tasks done with fragmented context lead to bugs, inconsistencies, and technical debt. Better to pause and resume fresh than rush through with degraded context.
+
 ## Large Task Auto-Breakdown Protocol
 
 **MANDATORY: Break down tasks >12h into manageable phases**
