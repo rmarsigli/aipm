@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-01-25
+### Added
+- **Cursor IDE Support**: Full integration with CURSOR.md and .cursorrules.
+  - Native Cursor rules file with automatic detection
+  - Chat-compatible prompt file (1039 lines)
+  - Multi-file editing and Code Actions guidance
+  - Hybrid approach: both chat-compatible and native integration
+  - Added 'cursor' to AI tools list
+- **Task Workflow Command**: New `aipim task next` command.
+  - Generates prompts for next backlog task automatically
+  - Embedded mandatory instructions (eliminates manual repetition)
+  - Context awareness and session integrity guidelines
+  - Includes Task Workflow Protocol in all AI prompts
+- **Rust Production Guidelines**: Comprehensive Rust guideline (381 lines).
+  - Zero-cost abstractions and production-ready patterns
+  - Strict linting rules (deny unwrap/expect/panic in production)
+  - Tokio async runtime, error handling with Result<T,E>
+  - Framework auto-detection via Cargo.toml/Cargo.lock
+  - Type-safe domain modeling with newtypes
+  - Comprehensive testing (unit, integration, property-based)
+
+### Changed
+- **Templates**: Renamed template files removing -template suffix for cleaner structure.
+- **Documentation**: Added complete Cursor Integration Guide with screenshots.
+
 ## [1.2.0] - 2026-01-19
 ### Added
 - **Template System**: New `aipim template` command for managing prompt templates.
