@@ -67,7 +67,7 @@ export async function start(options: StartOptions = {}): Promise<void> {
             log(chalk.green('[OK]') + ' Session prompt copied to clipboard!')
             log('')
             log(chalk.gray('Next steps:'))
-            log(chalk.gray('  1. Open your AI chat (Claude.ai, Gemini, ChatGPT)'))
+            log(chalk.gray('  1. Open your AI chat (Claude.ai, Gemini)'))
             log(chalk.gray('  2. Paste with Ctrl+V (or Cmd+V on Mac)'))
             log(chalk.gray('  3. Start developing!'))
             log('')

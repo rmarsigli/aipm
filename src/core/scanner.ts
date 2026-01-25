@@ -1,7 +1,6 @@
 import fs from 'fs-extra'
 import path from 'path'
 import { signatureManager, FileStatus } from './signature.js'
-import { FILES } from '@/constants.js'
 import { validatePath } from '@/utils/path-validator.js'
 
 export interface FileScanResult {
@@ -23,13 +22,9 @@ export class ProjectScanner {
         const results: FileScanResult[] = []
 
         // Define default files to check if not provided
-        // We typically check CLAUDE.md, GEMINI.md, etc., plus core .project docs
-        const targets = filesToScan || [
-            'CLAUDE.md',
-            'GEMINI.md',
-            'CHATGPT.md',
-            ...['backlog.md', 'decisions.md', 'completed.md'].map((f) => path.join(FILES.PROJECT_DIR, f))
-        ]
+        // We typically check CLAUDE.md, GEMINI.md (prompt files only)
+        // .project/ files are created on-demand by commands, not tracked by updater
+        const targets = filesToScan || ['CLAUDE.md', 'GEMINI.md']
 
         const tasks = targets.map(async (relativePath) => {
             let absolutePath = path.join(projectRoot, relativePath)

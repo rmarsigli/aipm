@@ -25,7 +25,6 @@ export async function promptConfiguration(
         choices: [
             { name: 'Claude Code (terminal AI assistant)', value: AI_TOOLS.CLAUDE_CODE, checked: true },
             { name: 'Google Gemini', value: AI_TOOLS.GEMINI, checked: false },
-            { name: 'ChatGPT', value: AI_TOOLS.CHATGPT, checked: false },
             { name: 'Cursor (AI-powered code editor)', value: AI_TOOLS.CURSOR, checked: false }
         ],
         validate: (answer: unknown): boolean | string => {
@@ -116,7 +115,6 @@ function getPromptFilename(ai: string): string {
     const filenames: Record<string, string> = {
         [AI_TOOLS.CLAUDE_CODE]: PROMPTS.CLAUDE,
         [AI_TOOLS.GEMINI]: PROMPTS.GEMINI,
-        [AI_TOOLS.CHATGPT]: PROMPTS.CHATGPT,
         [AI_TOOLS.CURSOR]: PROMPTS.CURSOR
     }
 

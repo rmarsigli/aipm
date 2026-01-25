@@ -65,4 +65,4 @@ export const LOCK_FILES: Record<string, string> = {
     'bun.lockb': 'bun'
 }
 
-export const PROMPT_FILES = [PROMPTS.CLAUDE, PROMPTS.GEMINI, PROMPTS.CHATGPT]
+export const PROMPT_FILES = [PROMPTS.CLAUDE, PROMPTS.GEMINI]

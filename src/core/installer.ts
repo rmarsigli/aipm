@@ -134,7 +134,6 @@ function getPromptFilename(ai: string): string {
         'claude-code': 'CLAUDE.md',
         'claude-ai': 'CLAUDE.md',
         gemini: 'GEMINI.md',
-        chatgpt: 'CHATGPT.md',
         cursor: 'CURSOR.md'
     }
 

@@ -24,7 +24,7 @@ export async function detectProject(cwd: string = process.cwd()): Promise<Detect
         filterExistingFiles(cwd, PROMPT_FILES)
     ])
 
-    const { framework, frameworkVersion } = detectFramework(pkg)
+    const { framework, frameworkVersion } = detectFramework(pkg, cwd)
 
     return {
         framework,
@@ -39,14 +39,26 @@ export async function detectProject(cwd: string = process.cwd()): Promise<Detect
     }
 }
 
-function detectFramework(pkg: PackageJson | null): { framework: string | null; frameworkVersion: string | null } {
-    if (!pkg) return { framework: null, frameworkVersion: null }
-
-    const match = FRAMEWORKS.find((sig: FrameworkConfig) => sig.check(pkg))
+function detectFramework(
+    pkg: PackageJson | null,
+    cwd: string
+): { framework: string | null; frameworkVersion: string | null } {
+    // Try to match framework (works for both package.json-based and file-based detection)
+    const match = FRAMEWORKS.find((sig: FrameworkConfig) => {
+        // Change working directory temporarily for hasFile checks
+        const originalCwd = process.cwd()
+        try {
+            process.chdir(cwd)
+            return sig.check(pkg || ({} as PackageJson))
+        } finally {
+            process.chdir(originalCwd)
+        }
+    })
 
     if (!match) return { framework: null, frameworkVersion: null }
 
-    const version = getDepVersion(pkg, match.id) || getDepVersion(pkg, match.id.split('-')[0])
+    // For package.json-based frameworks, try to get version
+    const version = pkg ? getDepVersion(pkg, match.id) || getDepVersion(pkg, match.id.split('-')[0]) : null
 
     return {
         framework: match.id,

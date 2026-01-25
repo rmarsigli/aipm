@@ -14,7 +14,6 @@ export const FILES = {
 export const PROMPTS = {
     CLAUDE: 'CLAUDE.md',
     GEMINI: 'GEMINI.md',
-    CHATGPT: 'CHATGPT.md',
     CURSOR: 'CURSOR.md',
     CURSOR_RULES: '.cursorrules'
 } as const
@@ -34,6 +33,5 @@ export const PROJECT_STRUCTURE = [
 export const AI_TOOLS = {
     CLAUDE_CODE: 'claude-code',
     GEMINI: 'gemini',
-    CHATGPT: 'chatgpt',
     CURSOR: 'cursor'
 } as const

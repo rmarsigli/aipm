@@ -104,7 +104,7 @@ export class Updater {
     }
 
     private isPromptFile(filename: string): boolean {
-        return ['CLAUDE.md', 'GEMINI.md', 'CHATGPT.md'].includes(filename)
+        return ['CLAUDE.md', 'GEMINI.md'].includes(filename)
     }
 
     private async generatePromptContent(config: InstallConfig, templatesDir: string): Promise<string> {
